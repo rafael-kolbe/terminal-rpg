@@ -94,5 +94,7 @@ function exit() {
         gameState = false;
     } else if (exitResponse === 'no') {
         console.log('The game was not closed.');
+    } else {
+        console.log('Sorry, I did not understand, please type it again.');
     }
 }
