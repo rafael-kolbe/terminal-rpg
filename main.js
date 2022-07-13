@@ -1,8 +1,8 @@
 //imports here
-const { player } = require('./player');
-const { monster } = require('./monsters');
-const { location } = require('./locations');
-const { action } = require('./actions');
+const { player } = require('./data/player');
+const { monster } = require('./data/monsters');
+const { location } = require('./data/locations');
+const { action } = require('./data/actions');
 
 //input enable
 const prompt = require('prompt-sync')({ sigint: true });
