@@ -8,7 +8,7 @@ const location = {
     outskirts: {
         name: 'outskirts',
         direction: ['city'],
-        mob: [monster.rat],
+        mob: [monster.rat, monster.spider],
     },
     cave: {
         name: 'cave',
