@@ -111,16 +111,16 @@ while (gameState) {
 
 function possibleDirections() {
     let directions = '';
-    for (let i = 0; i < location[player.location].direction.length; i++) {
-        directions += '[' + location[player.location].direction[i] + ']';
+    for (let direction of location[player.location].direction) {
+        directions += '[' + direction + ']';
     }
     return directions;
 }
 
 function possibleEncounters() {
     let encounters = '';
-    for (let i = 0; i < location[player.location].mob.length; i++) {
-        encounters += '[' + location[player.location].mob[i].name + ']';
+    for (let encounter of location[player.location].mob) {
+        encounters += '[' + encounter.name + ']';
     }
     return encounters;
 }

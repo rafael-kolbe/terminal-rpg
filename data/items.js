@@ -186,7 +186,7 @@ const item = {
                 if (player.hp[0] < player.hp[1]) {
                     player.hp[0] += 10;
                     if (player.hp[0] > player.hp[1]) {
-                        player.hp[0] === player.hp[1];
+                        player.hp[0] = player.hp[1];
                     }
                 }
             },

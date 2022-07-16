@@ -12,17 +12,11 @@ const action = {
         console.log(`[Status: ${player.status}]`);
     },
     equipment() {
-        function isTwoHanded() {
-            if (player.equipment.weapon.twoHanded) {
-                console.log('Two-Handed Weapon');
-            } else {
-                console.log('One-Handed Weapon');
-            }
-        }
+        let isTwoHanded = player.equipment.weapon.twoHanded
+            ? 'Two-Handed Weapon'
+            : 'One-Handed Weapon';
         console.log(
-            `[Weapon: ${player.equipment.weapon.name}, Atk: ${
-                player.equipment.weapon.atk
-            }, Def: ${player.equipment.weapon.def}, ${isTwoHanded()}]`,
+            `[Weapon: ${player.equipment.weapon.name}, Atk: ${player.equipment.weapon.atk}, Def: ${player.equipment.weapon.def}, ${isTwoHanded}]`,
         );
     },
     travel(newLocation) {
