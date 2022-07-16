@@ -4,10 +4,25 @@ const { monster } = require('./monsters');
 
 const action = {
     status() {
+        console.log(`[${player.name}, Level: ${player.level}]`);
+        console.log(`[Exp: ${player.currentExp + ' / ' + player.nextLevel}]`);
+        console.log(`[Hp: ${player.hp[0] + ' / ' + player.hp[1]}]`);
+        console.log(`[Atk: ${player.atk}, Magic Atk: ${player.magicAtk}]`);
+        console.log(`[Armor: ${player.armor}, Defense: ${player.def}]`);
+        console.log(`[Status: ${player.status}]`);
+    },
+    equipment() {
+        function isTwoHanded() {
+            if (player.equipment.weapon.twoHanded) {
+                console.log('Two-Handed Weapon');
+            } else {
+                console.log('One-Handed Weapon');
+            }
+        }
         console.log(
-            `[${player.name}, Level: ${player.level}, Exp: ${
-                player.currentExp + ' / ' + player.nextLevel
-            }, Hp: ${player.hp[0] + ' / ' + player.hp[1]}, Atk: ${player.atk}]`,
+            `[Weapon: ${player.equipment.weapon.name}, Atk: ${
+                player.equipment.weapon.atk
+            }, Def: ${player.equipment.weapon.def}, ${isTwoHanded()}]`,
         );
     },
     travel(newLocation) {

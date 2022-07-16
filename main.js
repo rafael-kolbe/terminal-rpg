@@ -18,10 +18,12 @@ while (gameState) {
     while (player.location === 'city' && player.mode === 'idle' && gameState) {
         console.log(`You are currently at [${player.location}]`);
         let playerAction = prompt(
-            'Choose an action => [status][travel][restore][exit]: ',
+            'Choose an action => [status][equipment][travel][restore][exit]: ',
         );
         if (playerAction === 'status') {
             action.status();
+        } else if (playerAction === 'equipment') {
+            action.equipment();
         } else if (playerAction === 'travel') {
             action.travel(
                 prompt(
