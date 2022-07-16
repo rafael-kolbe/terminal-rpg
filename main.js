@@ -10,8 +10,6 @@ const prompt = require('prompt-sync')({ sigint: true });
 let gameState = true;
 let objMonster;
 
-console.log(expTable);
-
 const nameChosen = prompt('Choose a name: ');
 player.name = nameChosen.charAt(0).toUpperCase() + nameChosen.slice(1);
 console.log(`Hello adventure ${player.name}!`);
@@ -27,9 +25,7 @@ while (gameState) {
         } else if (playerAction === 'travel') {
             action.travel(
                 prompt(
-                    `Choose a location to travel to => [${
-                        location[player.location].direction[0]
-                    }][${location[player.location].direction[1]}]: `,
+                    `Choose a location to travel to => ${possibleDirections()}: `,
                 ),
             );
         } else if (playerAction === 'restore') {
@@ -51,14 +47,15 @@ while (gameState) {
         } else if (playerAction === 'travel') {
             action.travel(
                 prompt(
-                    `Choose a location to travel to => [${
-                        location[player.location].direction[0]
-                    }]: `,
+                    `Choose a location to travel to => ${possibleDirections()}: `,
                 ),
             );
         } else if (playerAction === 'hunt') {
-            //to be added
-            console.log('to be added.');
+            objMonster = action.hunt(
+                prompt(
+                    `Choose a target to hunt in this area => ${possibleEncounters()}: `,
+                ),
+            );
         } else {
             console.log('Sorry, I did not understand, please type it again.');
         }
@@ -78,17 +75,13 @@ while (gameState) {
         } else if (playerAction === 'travel') {
             action.travel(
                 prompt(
-                    `Choose a location to travel to => [${
-                        location[player.location].direction[0]
-                    }]: `,
+                    `Choose a location to travel to => ${possibleDirections()}: `,
                 ),
             );
         } else if (playerAction === 'hunt') {
             objMonster = action.hunt(
                 prompt(
-                    `Choose a target to hunt in this area => [${
-                        location[player.location].mob[0].name
-                    }]: `,
+                    `Choose a target to hunt in this area => ${possibleEncounters()}: `,
                 ),
             );
         } else {
@@ -112,6 +105,22 @@ while (gameState) {
             console.log('Sorry, I did not understand, please type it again.');
         }
     }
+}
+
+function possibleDirections() {
+    let directions = '';
+    for (let i = 0; i < location[player.location].direction.length; i++) {
+        directions += '[' + location[player.location].direction[i] + ']';
+    }
+    return directions;
+}
+
+function possibleEncounters() {
+    let encounters = '';
+    for (let i = 0; i < location[player.location].mob.length; i++) {
+        encounters += '[' + location[player.location].mob[i].name + ']';
+    }
+    return encounters;
 }
 
 function attack() {
@@ -164,7 +173,7 @@ function exit() {
         console.log('Thanks for playing!');
         gameState = false;
     } else if (exitResponse === 'no') {
-        console.log('The game was not closed.');
+        console.log('Action canceled. The game was not closed.');
     } else {
         console.log('Sorry, I did not understand, please type it again.');
     }
