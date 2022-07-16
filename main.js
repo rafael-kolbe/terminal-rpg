@@ -39,7 +39,7 @@ while (gameState) {
         }
     }
 
-    while (player.location === 'cave' && player.mode === 'idle' && gameState) {
+    while (player.location === 'cave' && player.mode === 'idle') {
         console.log(`You are currently at [${player.location}]`);
         let playerAction = prompt(
             'Choose an action => [status][travel][hunt]: ',
@@ -63,11 +63,7 @@ while (gameState) {
         }
     }
 
-    while (
-        player.location === 'outskirts' &&
-        player.mode === 'idle' &&
-        gameState
-    ) {
+    while (player.location === 'outskirts' && player.mode === 'idle') {
         console.log(`You are currently at [${player.location}]`);
         let playerAction = prompt(
             'Choose an action => [status][travel][hunt]: ',
