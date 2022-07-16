@@ -19,6 +19,10 @@ const action = {
             `[Weapon: ${player.equipment.weapon.name}, Atk: ${player.equipment.weapon.atk}, Def: ${player.equipment.weapon.def}, ${isTwoHanded}]`,
         );
     },
+    inventory() {
+        console.log(`[Inventory max size: ${player.equipment.backpack.size}]`);
+        console.log(player.items);
+    },
     travel(newLocation) {
         let validation =
             location[player.location].direction.includes(newLocation);

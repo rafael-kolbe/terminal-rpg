@@ -26,6 +26,7 @@ let player = {
         ring: '',
         backpack: item.backpacks.bag,
     },
+    items: [item.weapons.swords.knife.name, item.shields.woodenShield.name],
     location: 'city',
     mode: 'idle',
 };
