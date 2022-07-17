@@ -1,5 +1,5 @@
 //imports here
-const { player, expTable } = require('./data/player');
+const { player } = require('./data/player');
 const { vocation } = require('./data/vocations');
 const { location } = require('./data/locations');
 const { action } = require('./data/actions');
