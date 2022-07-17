@@ -1,7 +1,7 @@
 const { item } = require('./items');
 
 const expTable = [];
-for (let i = 1; i < 100; i++) {
+for (let i = 1; i <= 100; i++) {
     expTable.push((100 / 2) * (i + 2) * (i - 1) + 100);
 }
 
