@@ -1,5 +1,3 @@
-const { player } = require('./player');
-
 const item = {
     weapons: {
         swords: {
@@ -177,20 +175,14 @@ const item = {
             name: 'Protection Amulet',
             charges: 200,
             bonus() {
-                if (this.charges > 0) {
-                    player.armor += 15;
-                }
+                //to do
             },
         },
         silverAmulet: {
             name: 'Silver Amulet',
             charges: 200,
             bonus() {
-                for (let status of player.status) {
-                    if (status === 'Poison') {
-                        player.status.pop();
-                    }
-                }
+                //to do
             },
         },
     },
@@ -198,12 +190,7 @@ const item = {
         lifeRing: {
             name: 'Life Ring',
             bonus() {
-                if (player.hp[0] < player.hp[1]) {
-                    player.hp[0] += 10;
-                    if (player.hp[0] > player.hp[1]) {
-                        player.hp[0] = player.hp[1];
-                    }
-                }
+                //to do
             },
         },
     },
