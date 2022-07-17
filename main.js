@@ -1,5 +1,5 @@
 //imports here
-const { player, expTable } = require('./data/player');
+const { player } = require('./data/player');
 const { vocation } = require('./data/vocations');
 const { location } = require('./data/locations');
 const { action } = require('./data/actions');
@@ -10,8 +10,7 @@ const prompt = require('prompt-sync')({ sigint: true });
 //code here
 let gameState = true;
 let vocationSet = false;
-
-console.log(expTable);
+let objMonster;
 
 const nameChosen = prompt('Choose a name: ');
 player.name = nameChosen.charAt(0).toUpperCase() + nameChosen.slice(1);
