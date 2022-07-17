@@ -6,30 +6,35 @@ const item = {
             knife: {
                 name: 'Knife',
                 atk: 3,
+                magicAtk: 0,
                 def: 0,
-                twoHanded: true,
+                twoHanded: false,
             },
             woodenSword: {
                 name: 'Wooden Sword',
                 atk: 5,
+                magicAtk: 0,
                 def: 3,
                 twoHanded: false,
             },
             rapier: {
                 name: 'Rapier',
                 atk: 7,
+                magicAtk: 0,
                 def: 5,
                 twoHanded: false,
             },
             sword: {
                 name: 'Sword',
                 atk: 9,
+                magicAtk: 0,
                 def: 7,
                 twoHanded: false,
             },
             brandedSword: {
                 name: 'Branded Sword',
                 atk: 13,
+                magicAtk: 0,
                 def: 6,
                 twoHanded: true,
             },
@@ -38,18 +43,21 @@ const item = {
             hatchet: {
                 name: 'Hatchet',
                 atk: 6,
+                magicAtk: 0,
                 def: 2,
                 twoHanded: false,
             },
             axe: {
                 name: 'Axe',
                 atk: 10,
+                magicAtk: 0,
                 def: 3,
                 twoHanded: true,
             },
             lumberjackAxe: {
                 name: 'Lumberjack Axe',
                 atk: 16,
+                magicAtk: 0,
                 def: 3,
                 twoHanded: true,
             },
@@ -57,6 +65,7 @@ const item = {
         rods: {
             apprenticeRod: {
                 name: 'Apprentice Rod',
+                atk: 0,
                 magicAtk: 7,
                 def: 0,
                 manaCost: 2,
@@ -64,6 +73,7 @@ const item = {
             },
             natureRod: {
                 name: 'Nature Rod',
+                atk: 0,
                 magicAtk: 13,
                 def: 0,
                 manaCost: 3,
@@ -71,6 +81,7 @@ const item = {
             },
             tempestRod: {
                 name: 'Tempest Rod',
+                atk: 0,
                 magicAtk: 19,
                 def: 0,
                 manaCost: 5,
@@ -81,18 +92,21 @@ const item = {
             shortBow: {
                 name: 'Short Bow',
                 atk: 7,
+                magicAtk: 0,
                 def: 0,
                 twoHanded: true,
             },
             bow: {
                 name: 'Bow',
                 atk: 12,
+                magicAtk: 0,
                 def: 0,
                 twoHanded: true,
             },
             longbow: {
                 name: 'Long Bow',
                 atk: 16,
+                magicAtk: 0,
                 def: 0,
                 twoHanded: true,
             },
@@ -101,35 +115,35 @@ const item = {
     armors: {
         coat: {
             name: 'Coat',
-            armor: 3,
+            arm: 3,
         },
         leatherArmor: {
             name: 'Leather Armor',
-            armor: 5,
+            arm: 5,
         },
         chainArmor: {
             name: 'Chain Armor',
-            armor: 7,
+            arm: 7,
         },
         brassArmor: {
             name: 'Brass Armor',
-            armor: 10,
+            arm: 10,
         },
         ironArmor: {
             name: 'Iron Armor',
-            armor: 13,
+            arm: 13,
         },
         nobleArmor: {
             name: 'Noble Armor',
-            armor: 16,
+            arm: 16,
         },
         steelArmor: {
             name: 'Steel Armor',
-            armor: 20,
+            arm: 20,
         },
         plateArmor: {
             name: 'Plate Armor',
-            armor: 25,
+            arm: 25,
         },
     },
     shields: {
@@ -170,6 +184,7 @@ const item = {
         },
         silverAmulet: {
             name: 'Silver Amulet',
+            charges: 200,
             bonus() {
                 for (let status of player.status) {
                     if (status === 'Poison') {

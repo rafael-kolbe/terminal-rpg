@@ -1,5 +1,6 @@
 //imports here
 const { player, expTable } = require('./data/player');
+const { vocation } = require('./data/vocations');
 const { location } = require('./data/locations');
 const { action } = require('./data/actions');
 
@@ -8,11 +9,36 @@ const prompt = require('prompt-sync')({ sigint: true });
 
 //code here
 let gameState = true;
+let vocationSet = false;
 let objMonster;
 
 const nameChosen = prompt('Choose a name: ');
 player.name = nameChosen.charAt(0).toUpperCase() + nameChosen.slice(1);
 console.log(`Hello adventure ${player.name}!`);
+
+while (!vocationSet) {
+    const vocationChosen = prompt(
+        `Please, choose a vocation => [knight][mage][archer]: `,
+    );
+    if (vocationChosen === 'knight') {
+        player.vocation = vocation.knight;
+        vocation.knight.startingEquipment();
+        console.log('You became a Knight!');
+        vocationSet = true;
+    } else if (vocationChosen === 'mage') {
+        player.vocation = vocation.mage;
+        vocation.mage.startingEquipment();
+        console.log('You became a Mage!');
+        vocationSet = true;
+    } else if (vocationChosen === 'archer') {
+        player.vocation = vocation.archer;
+        vocation.archer.startingEquipment();
+        console.log('You became an Archer!');
+        vocationSet = true;
+    } else {
+        console.log('Vocation invalid');
+    }
+}
 
 while (gameState) {
     while (player.location === 'city' && player.mode === 'idle' && gameState) {
@@ -155,11 +181,13 @@ function run() {
 }
 
 function levelUp() {
-    player.level += 1;
-    player.nextLevel = expTable[player.level - 1];
-    player.hp[1] += 5;
-    player.hp[0] += 5;
-    player.atk += 3;
+    if (player.vocation.name === 'Knight') {
+        vocation.knight.levelUp();
+    } else if (player.vocation.name === 'Mage') {
+        vocation.mage.levelUp();
+    } else if (player.vocation.name === 'Archer') {
+        vocation.archer.levelUp();
+    }
     console.log(
         `You advanced from level ${player.level - 1} to level ${player.level}!`,
     );
