@@ -1,8 +1,9 @@
 //imports here
-const { player } = require('./data/player');
+const { player, expTable } = require('./data/player');
 const { vocation } = require('./data/vocations');
 const { location } = require('./data/locations');
 const { action } = require('./data/actions');
+const { playerAbility } = require('./data/skills');
 
 //input enable
 const prompt = require('prompt-sync')({ sigint: true });
@@ -10,31 +11,38 @@ const prompt = require('prompt-sync')({ sigint: true });
 //code here
 let gameState = true;
 let vocationSet = false;
-let objMonster;
+let arrMonster = [];
+let turn = 'standby';
 
 const nameChosen = prompt('Choose a name: ');
 player.name = nameChosen.charAt(0).toUpperCase() + nameChosen.slice(1);
-console.log(`Hello adventure ${player.name}!`);
+console.log(`\nHello adventure ${player.name}!\n`);
 
 while (!vocationSet) {
     const vocationChosen = prompt(`Please, choose a vocation => [knight][mage][archer]: `);
     if (vocationChosen === 'knight') {
         player.vocation = vocation.knight;
         vocation.knight.startingEquipment();
-        console.log('You became a Knight!');
+        console.log('\nYou became a Knight!\n');
+        player['attack'] = playerAbility.attack;
+        player['brutal strike'] = playerAbility.brutalStrike;
         vocationSet = true;
     } else if (vocationChosen === 'mage') {
         player.vocation = vocation.mage;
         vocation.mage.startingEquipment();
-        console.log('You became a Mage!');
+        console.log('\nYou became a Mage!\n');
+        player['attack'] = playerAbility.attack;
+        player['energy strike'] = playerAbility.energyStrike;
         vocationSet = true;
     } else if (vocationChosen === 'archer') {
         player.vocation = vocation.archer;
         vocation.archer.startingEquipment();
-        console.log('You became an Archer!');
+        console.log('\nYou became an Archer!\n');
+        player['attack'] = playerAbility.attack;
+        player['double shot'] = playerAbility.doubleShot;
         vocationSet = true;
     } else {
-        console.log('Vocation invalid');
+        console.log('Vocation invalid.\n');
     }
 }
 
@@ -55,7 +63,7 @@ while (gameState) {
         } else if (playerAction === 'exit') {
             exit();
         } else {
-            console.log('Sorry, I did not understand, please type it again.');
+            console.log('\nAction invalid.\n');
         }
     }
 
@@ -71,22 +79,97 @@ while (gameState) {
         } else if (playerAction === 'travel') {
             action.travel(prompt(`Choose a location to travel to => ${possibleDirections()}: `));
         } else if (playerAction === 'hunt') {
-            objMonster = action.hunt(prompt(`Choose a target to hunt in this area => ${possibleEncounters()}: `));
+            console.log(`\nHunting at ${player.location}...`);
+            arrMonster = action.hunt(possibleEncounters());
+            player.mode = 'battle';
         } else {
-            console.log('Sorry, I did not understand, please type it again.');
+            console.log('\nAction invalid.\n');
         }
     }
 
     while (player.mode === 'battle') {
-        console.log(`[${player.name}, Level: ${player.level}, Hp: ${player.hp[0]} / ${player.hp[1]}]`);
-        console.log(`[${objMonster.name}, Level: ${objMonster.level}, Hp: ${objMonster.hp[0]} / ${objMonster.hp[1]}]`);
-        let playerAction = prompt(`Choose an action => [attack][run]: `);
-        if (playerAction === 'attack') {
-            action.attack();
-        } else if (playerAction === 'run') {
-            action.run();
-        } else {
-            console.log('Sorry, I did not understand, please type it again.');
+        while (turn === 'standby' && player.mode === 'battle') {
+            if (arrMonster.length === 0) {
+                finishBattle();
+            } else {
+                console.log(
+                    `\n[${player.name}, Level: ${player.level}, Hp: ${player.hp[0]} / ${player.hp[1]}], Mana: ${player.mana[0]} / ${player.mana[1]}]`,
+                );
+                console.log(`\n          vs\n`);
+
+                for (let i = 0; i < arrMonster.length; i++) {
+                    console.log(
+                        `[${i + 1}. ${arrMonster[i].name}, Level: ${arrMonster[i].level}, Hp: ${
+                            arrMonster[i].hp[0]
+                        } / ${arrMonster[i].hp[1]}]`,
+                    );
+                }
+                console.log(``);
+                turn = 'player';
+            }
+        }
+
+        while (turn === 'player' && player.mode === 'battle') {
+            let playerAction = prompt('Choose an action => [attack][spell][item]: ');
+            if (playerAction === 'attack') {
+                let target = prompt(`Choose a target => ${possibleTargets()}: `);
+                if (arrMonster[target - 1]) {
+                    if (player.vocation.name === 'Mage' && player.mana[0] < player.equipment.weapon.manaCost) {
+                        console.log('\nNot enough mana.\n');
+                        turn = 'monster';
+                    } else {
+                        const damageDealt = player['attack']();
+                        arrMonster[target - 1].hp[0] -= damageDealt;
+                        console.log(`\n${player.name} used a basic attack!`);
+                        console.log(`You dealt ${damageDealt} damage to ${arrMonster[target - 1].name}.\n`);
+
+                        if (arrMonster[target - 1].hp[0] < 0) {
+                            arrMonster[target - 1].hp[0] = 0;
+                            console.log(`You killed a ${arrMonster[target - 1].name}.`);
+                            player.currentExp += arrMonster[target - 1].expGain;
+                            console.log(`You gained ${arrMonster[target - 1].expGain} experience.\n`);
+                            arrMonster.splice(arrMonster.indexOf(target - 1, 1));
+                            while (player.currentExp >= player.nextLevel) {
+                                action.levelUp();
+                                action.restore();
+                            }
+                        }
+                        turn = 'monster';
+                    }
+                } else {
+                    console.log('\nTarget invalid.\n');
+                }
+            } else if (playerAction === 'spell') {
+                // to do
+            } else if (playerAction === 'item') {
+                // to do
+            } else {
+                console.log('\nAction invalid.\n');
+            }
+        }
+
+        while (turn === 'monster' && player.mode === 'battle') {
+            if (arrMonster.length > 0) {
+                for (let monster of arrMonster) {
+                    if (monster.hp[0] > 0) {
+                        player.hp[0] -= monster.script();
+
+                        if (player.hp[0] <= 0) {
+                            console.log(`\nYou have been killed by ${monster.name}.`);
+                            const expLost = Math.floor(player.currentExp * 0.8);
+                            player.currentExp -= expLost;
+                            console.log(`You lost ${expLost} experience.\n`);
+                            while (player.currentExp < expTable[player.level - 2]) {
+                                action.levelDown();
+                            }
+                            finishBattle();
+                            player.location = 'city';
+                            action.restore();
+                        }
+                    }
+                }
+            }
+            turn = 'standby';
         }
     }
 }
@@ -100,21 +183,39 @@ function possibleDirections() {
 }
 
 function possibleEncounters() {
-    let encounters = '';
+    let encounters = [];
     for (let encounter of location[player.location].mob) {
-        encounters += '[' + encounter.name + ']';
+        encounters.push(encounter);
     }
-    return encounters;
+    return encounters.length;
+}
+
+function possibleTargets() {
+    let targets = '';
+    for (let i = 0; i < arrMonster.length; i++) {
+        if (arrMonster[i].hp[0] > 0) {
+            targets += `[${i + 1}. ${arrMonster[i].name}]`;
+        }
+    }
+    return targets;
+}
+
+function finishBattle() {
+    while (arrMonster.length > 0) {
+        arrMonster.pop();
+    }
+    player.mode = 'idle';
+    turn = 'standby';
 }
 
 function exit() {
     let exitResponse = prompt('Are you sure you want to leave the game? => [yes][no]: ');
     if (exitResponse === 'yes') {
-        console.log('Thanks for playing!');
+        console.log('\nThanks for playing!');
         gameState = false;
     } else if (exitResponse === 'no') {
-        console.log('Action canceled. The game was not closed.');
+        console.log('\nAction canceled. The game was not closed.\n');
     } else {
-        console.log('Sorry, I did not understand, please type it again.');
+        console.log('\nAction invalid.\n');
     }
 }

@@ -1,5 +1,3 @@
-const { monster } = require('./monsters');
-
 const location = {
     city: {
         name: 'city',
@@ -8,12 +6,12 @@ const location = {
     outskirts: {
         name: 'outskirts',
         direction: ['city'],
-        mob: [monster.rat],
+        mob: ['rat'],
     },
     cave: {
         name: 'cave',
         direction: ['city'],
-        mob: [monster.rat, monster.spider],
+        mob: ['rat', 'spider'],
     },
 };
 

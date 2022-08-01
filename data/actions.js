@@ -1,25 +1,24 @@
-const { player, expTable } = require('./player');
+const { player } = require('./player');
 const { location } = require('./locations');
-const { monster } = require('./monsters');
+const { monster, monsterFactory, listOfMonstersAndTheirAbilities } = require('./monsters');
 const { vocation } = require('./vocations');
-
-let objMonster = {};
+const { monsterAbility } = require('./skills');
 
 const action = {
     status() {
-        console.log(`[${player.name}, ${player.vocation.name}, Level: ${player.level}]`);
+        console.log(`\n[${player.name}, ${player.vocation.name}, Level: ${player.level}]`);
         console.log(`[Exp: ${player.currentExp + ' / ' + player.nextLevel}]`);
         console.log(`[Hp: ${player.hp[0] + ' / ' + player.hp[1]}]`);
         console.log(`[Mana: ${player.mana[0] + ' / ' + player.mana[1]}]`);
         console.log(`[Atk: ${player.atk}, Magic Atk: ${player.magicAtk}]`);
         console.log(`[Armor: ${player.armor}, Defense: ${player.def}]`);
-        console.log(`[Status: ${player.status}]`);
+        console.log(`[Status: ${player.status}]\n`);
     },
     equipment() {
         let isTwoHanded = player.equipment.weapon.twoHanded ? 'Two-Handed Weapon' : 'One-Handed Weapon';
         player.equipment.weapon
             ? console.log(
-                  `[Weapon: ${player.equipment.weapon.name}, Atk: ${player.equipment.weapon.atk}, Def: ${player.equipment.weapon.def}, ${isTwoHanded}]`,
+                  `\n[Weapon: ${player.equipment.weapon.name}, Atk: ${player.equipment.weapon.atk}, M.Atk: ${player.equipment.weapon.magicAtk}, Def: ${player.equipment.weapon.def}, ${isTwoHanded}]`,
               )
             : console.log('[Weapon: Not Equipped]');
         player.equipment.shield
@@ -40,72 +39,79 @@ const action = {
             ? console.log(`[Ring: ${player.equipment.ring.name}]`)
             : console.log('[Ring: Not Equipped]');
 
-        console.log(`[Backpack: ${player.equipment.backpack.name}, Size: ${player.equipment.backpack.size}]`);
+        console.log(`[Backpack: ${player.equipment.backpack.name}, Size: ${player.equipment.backpack.size}]\n`);
     },
     inventory() {
-        console.log(`[Inventory max size: ${player.equipment.backpack.size}]`);
-        console.log(player.items);
+        console.log(`\n[Inventory max size: ${player.equipment.backpack.size}]`);
+        console.log(player.items, `\n`);
     },
     travel(newLocation) {
         let validation = location[player.location].direction.includes(newLocation);
         if (validation) {
             player.location = newLocation;
-            console.log(`Traveling to ${player.location}...`);
+            console.log(`\nTraveling to ${player.location}...\n`);
         } else {
-            console.log('Sorry, I did not understand, please type it again.');
+            console.log('\nLocation invalid.\n');
         }
     },
     restore() {
         player.hp[0] = player.hp[1];
         player.mana[0] = player.mana[1];
-        console.log('You have been restored to full hp/mana.');
+        console.log('\nYou have been restored to full hp/mana.\n');
     },
-    hunt(enemyChosen) {
-        let enemy = enemyChosen.toLowerCase();
-        let validation = location[player.location].mob.includes(monster[enemy]);
-        if (validation) {
-            console.log(`Hunting a ${enemy.charAt(0).toUpperCase() + enemy.slice(1)}...`);
-            Object.assign(objMonster, monster[enemy]);
-            player.mode = 'battle';
-            return objMonster;
-        } else {
-            console.log(`${enemyChosen} is not a valid target.`);
-        }
-    },
-    attack() {
-        objMonster.hp[0] -= player.atk;
-        console.log(`You dealt ${player.atk} damage to ${objMonster.name}.`);
-        if (objMonster.hp[0] > 0) {
-            player.hp[0] -= objMonster.atk;
-            console.log(`You received ${objMonster.atk} damage from ${objMonster.name}.`);
-            if (player.hp[0] <= 0) {
-                console.log(`You have been killed by a ${objMonster.name}.`);
-                let expLost = Math.floor(player.currentExp * 0.1);
-                player.currentExp -= expLost;
-                console.log(`You have lost ${expLost} experience.`);
-                while (player.currentExp < expTable[player.level - 2]) {
-                    this.levelDown();
+    hunt(numOfPossibleEncounters) {
+        const numOfMonstersFound = Math.ceil(Math.random() * 3);
+        let monsterList = [];
+        for (let i = 0; i < numOfMonstersFound; i++) {
+            let monsterPick = location[player.location].mob[Math.floor(Math.random() * numOfPossibleEncounters)];
+            if (i === 0) {
+                let monster1 = new monsterFactory(
+                    monster[monsterPick][0],
+                    monster[monsterPick][1],
+                    monster[monsterPick][2],
+                    monster[monsterPick][3],
+                    monster[monsterPick][4],
+                    monster[monsterPick][5],
+                );
+                for (let j = 0; j < listOfMonstersAndTheirAbilities[monster1.name].length; j++) {
+                    monster1[listOfMonstersAndTheirAbilities[monster1.name][j]] =
+                        monsterAbility[listOfMonstersAndTheirAbilities[monster1.name][j]];
                 }
-                objMonster.reset();
-                this.restore();
-                player.mode = 'idle';
-                player.location = 'city';
+                let objMonster = Object.assign({}, monster1);
+                monsterList.push(objMonster);
+            } else if (i === 1) {
+                let monster2 = new monsterFactory(
+                    monster[monsterPick][0],
+                    monster[monsterPick][1],
+                    monster[monsterPick][2],
+                    monster[monsterPick][3],
+                    monster[monsterPick][4],
+                    monster[monsterPick][5],
+                );
+                for (let j = 0; j < listOfMonstersAndTheirAbilities[monster2.name].length; j++) {
+                    monster2[listOfMonstersAndTheirAbilities[monster2.name][j]] =
+                        monsterAbility[listOfMonstersAndTheirAbilities[monster2.name][j]];
+                }
+                let objMonster = Object.assign({}, monster2);
+                monsterList.push(objMonster);
+            } else if (i === 2) {
+                let monster3 = new monsterFactory(
+                    monster[monsterPick][0],
+                    monster[monsterPick][1],
+                    monster[monsterPick][2],
+                    monster[monsterPick][3],
+                    monster[monsterPick][4],
+                    monster[monsterPick][5],
+                );
+                for (let j = 0; j < listOfMonstersAndTheirAbilities[monster3.name].length; j++) {
+                    monster3[listOfMonstersAndTheirAbilities[monster3.name][j]] =
+                        monsterAbility[listOfMonstersAndTheirAbilities[monster3.name][j]];
+                }
+                let objMonster = Object.assign({}, monster3);
+                monsterList.push(objMonster);
             }
-        } else {
-            console.log(`You killed a ${objMonster.name}.`);
-            console.log(`You gained ${objMonster.expGain} experience.`);
-            player.currentExp += objMonster.expGain;
-            while (player.currentExp >= player.nextLevel) {
-                this.levelUp();
-            }
-            objMonster.reset();
-            player.mode = 'idle';
         }
-    },
-    run() {
-        console.log('You ran from the battle.');
-        objMonster.reset();
-        player.mode = 'idle';
+        return monsterList;
     },
     levelUp() {
         if (player.vocation.name === 'Knight') {
