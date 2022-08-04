@@ -80,7 +80,7 @@ while (gameState) {
             action.travel(prompt(`Choose a location to travel to => ${possibleDirections()}: `));
         } else if (playerAction === 'hunt') {
             console.log(`\nHunting at ${player.location}...`);
-            arrMonster = action.hunt(possibleEncounters());
+            arrMonster = action.hunt(location[player.location].mob.length);
             player.mode = 'battle';
         } else {
             console.log('\nAction invalid.\n');
@@ -123,12 +123,12 @@ while (gameState) {
                         console.log(`\n${player.name} used a basic attack!`);
                         console.log(`You dealt ${damageDealt} damage to ${arrMonster[target - 1].name}.\n`);
 
-                        if (arrMonster[target - 1].hp[0] < 0) {
+                        if (arrMonster[target - 1].hp[0] <= 0) {
                             arrMonster[target - 1].hp[0] = 0;
                             console.log(`You killed a ${arrMonster[target - 1].name}.`);
                             player.currentExp += arrMonster[target - 1].expGain;
                             console.log(`You gained ${arrMonster[target - 1].expGain} experience.\n`);
-                            arrMonster.splice(arrMonster.indexOf(target - 1, 1));
+                            arrMonster.splice(arrMonster.indexOf(arrMonster[target - 1]), 1);
                             while (player.currentExp >= player.nextLevel) {
                                 action.levelUp();
                                 action.restore();
@@ -180,14 +180,6 @@ function possibleDirections() {
         directions += '[' + direction + ']';
     }
     return directions;
-}
-
-function possibleEncounters() {
-    let encounters = [];
-    for (let encounter of location[player.location].mob) {
-        encounters.push(encounter);
-    }
-    return encounters.length;
 }
 
 function possibleTargets() {

@@ -6,12 +6,12 @@ const location = {
     outskirts: {
         name: 'outskirts',
         direction: ['city'],
-        mob: ['rat'],
+        mob: ['Rat'],
     },
     cave: {
         name: 'cave',
         direction: ['city'],
-        mob: ['rat', 'spider'],
+        mob: ['Rat', 'Spider'],
     },
 };
 
