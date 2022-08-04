@@ -28,6 +28,7 @@ let player = {
         backpack: item.backpacks.bag,
     },
     items: [],
+    spells: [],
     location: 'city',
     mode: 'idle',
     equipWeapon() {
@@ -51,6 +52,19 @@ let player = {
     },
     unequipArmor() {
         this.armor -= this.equipment.armor.arm;
+    },
+    attack() {
+        if (this.vocation.name === 'Knight') {
+            return Math.floor(Math.random() * (this.atk * 1.2 - this.atk * 0.8) + this.atk * 0.8);
+        } else if (this.vocation.name === 'Mage') {
+            if (player.equipment.weapon) {
+                player.mana[0] -= player.equipment.weapon.manaCost;
+                return Math.floor(Math.random() * (this.magicAtk * 1.8 - this.magicAtk * 1) + this.magicAtk * 1);
+            }
+            return Math.floor(Math.random() * (this.atk * 1 - this.atk * 0.5) + this.atk * 0.5);
+        } else if (this.vocation.name === 'Archer') {
+            return Math.floor(Math.random() * (this.atk * 2.5 - this.atk * 0) + this.atk * 0);
+        }
     },
 };
 

@@ -1,5 +1,5 @@
 const { monsterScript } = require('./scripts');
-const { monsterAbility } = require('./skills');
+const { monsterAbility } = require('./spells');
 
 const monster = {
     Rat: class {

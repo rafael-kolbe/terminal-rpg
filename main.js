@@ -3,7 +3,7 @@ const { player, expTable } = require('./data/player');
 const { vocation } = require('./data/vocations');
 const { location } = require('./data/locations');
 const { action } = require('./data/actions');
-const { playerAbility } = require('./data/skills');
+const { spell } = require('./data/spells');
 
 //input enable
 const prompt = require('prompt-sync')({ sigint: true });
@@ -24,22 +24,19 @@ while (!vocationSet) {
         player.vocation = vocation.knight;
         vocation.knight.startingEquipment();
         console.log('\nYou became a Knight!\n');
-        player['attack'] = playerAbility.attack;
-        player['brutal strike'] = playerAbility.brutalStrike;
+        player.spells.push('Brutal Strike');
         vocationSet = true;
     } else if (vocationChosen === 'mage') {
         player.vocation = vocation.mage;
         vocation.mage.startingEquipment();
         console.log('\nYou became a Mage!\n');
-        player['attack'] = playerAbility.attack;
-        player['energy strike'] = playerAbility.energyStrike;
+        player.spells.push('Energy Strike');
         vocationSet = true;
     } else if (vocationChosen === 'archer') {
         player.vocation = vocation.archer;
         vocation.archer.startingEquipment();
         console.log('\nYou became an Archer!\n');
-        player['attack'] = playerAbility.attack;
-        player['double shot'] = playerAbility.doubleShot;
+        player.spells.push('Double Shot');
         vocationSet = true;
     } else {
         console.log('Vocation invalid.\n');
@@ -118,7 +115,7 @@ while (gameState) {
                         console.log('\nNot enough mana.\n');
                         turn = 'monster';
                     } else {
-                        const damageDealt = player['attack']();
+                        const damageDealt = player.attack();
                         arrMonster[target - 1].hp[0] -= damageDealt;
                         console.log(`\n${player.name} used a basic attack!`);
                         console.log(`You dealt ${damageDealt} damage to ${arrMonster[target - 1].name}.\n`);
@@ -140,7 +137,37 @@ while (gameState) {
                     console.log('\nTarget invalid.\n');
                 }
             } else if (playerAction === 'spell') {
-                // to do
+                let spellChosen = prompt(`Choose a spell => ${possibleSpells()}: `);
+                if (player.spells[spellChosen - 1]) {
+                    if (player.mana[0] >= spell[player.spells[spellChosen - 1]].manaCost) {
+                        let target = prompt(`Choose a target => ${possibleTargets()}: `);
+                        if (arrMonster[target - 1]) {
+                            const damageDealt = spell[player.spells[spellChosen - 1]].effect();
+                            arrMonster[target - 1].hp[0] -= damageDealt;
+                            console.log(`\n${player.name} used ${player.spells[spellChosen - 1]}!`);
+                            console.log(`You dealt ${damageDealt} damage to ${arrMonster[target - 1].name}.\n`);
+
+                            if (arrMonster[target - 1].hp[0] <= 0) {
+                                arrMonster[target - 1].hp[0] = 0;
+                                console.log(`You killed a ${arrMonster[target - 1].name}.`);
+                                player.currentExp += arrMonster[target - 1].expGain;
+                                console.log(`You gained ${arrMonster[target - 1].expGain} experience.\n`);
+                                arrMonster.splice(arrMonster.indexOf(arrMonster[target - 1]), 1);
+                                while (player.currentExp >= player.nextLevel) {
+                                    action.levelUp();
+                                    action.restore();
+                                }
+                            }
+                            turn = 'monster';
+                        } else {
+                            console.log('\nTarget invalid.\n');
+                        }
+                    } else {
+                        console.log('\nNot enough mana.\n');
+                    }
+                } else {
+                    console.log('\nSpell invalid.\n');
+                }
             } else if (playerAction === 'item') {
                 // to do
             } else {
@@ -190,6 +217,14 @@ function possibleTargets() {
         }
     }
     return targets;
+}
+
+function possibleSpells() {
+    let spells = '';
+    for (let i = 0; i < player.spells.length; i++) {
+        spells += `[${i + 1}. ${player.spells[i]}]`;
+    }
+    return spells;
 }
 
 function finishBattle() {
