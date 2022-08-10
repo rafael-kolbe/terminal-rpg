@@ -20,6 +20,7 @@ console.log(`\nHello adventure ${player.name}!\n`);
 
 while (!vocationSet) {
     const vocationChosen = prompt(`Please, choose a vocation => [knight][mage][archer]: `);
+    //Add toLowerCase();
     if (vocationChosen === 'knight') {
         player.vocation = vocation.knight;
         vocation.knight.startingEquipment();

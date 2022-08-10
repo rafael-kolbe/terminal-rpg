@@ -1,5 +1,3 @@
-const { player } = require('./player');
-
 const item = {
     weapons: {
         swords: {
