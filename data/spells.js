@@ -1,4 +1,5 @@
 const { player } = require('./player');
+const { status } = require('./status');
 
 const spell = {
     'Brutal Strike': {
@@ -53,6 +54,23 @@ const monsterAbility = {
         let damage = Math.floor((monsterAtk - playerDef) * (1 - playerArmor / 100));
         damage = this.minimalDamage(damage);
         console.log(`You received ${damage} damage from it.`);
+        return damage;
+    },
+    poisonousStrike() {
+        const monsterAtk = Math.floor(Math.random() * (this.atk * 1.5 - this.atk * 1.2) + this.atk * 1.2);
+        const playerDef = player.def;
+        let damage = Math.floor(monsterAtk - playerDef);
+        damage = this.minimalDamage(damage);
+        console.log(`You received ${damage} damage from it.`);
+        if (!player.status.some(element => element.name === 'Poison')) {
+            player.status.push(status.poison);
+        } else {
+            for (let element of player.status) {
+                if (element.name === 'Poison') {
+                    element.duration = status.poison.duration;
+                }
+            }
+        }
         return damage;
     },
 };

@@ -1,3 +1,5 @@
+const { player } = require('./player');
+
 const item = {
     weapons: {
         swords: {
@@ -210,6 +212,91 @@ const item = {
         crimsonBackpack: {
             name: 'Crimson Backpack',
             size: 20,
+        },
+    },
+    usable: {
+        potions: {
+            lifePotion: {
+                name: 'Life Potion',
+                description: 'Heals for a small amount, tastes like strawberries.',
+                stackable: true,
+                price: 50,
+                use() {
+                    player.hp[0] += Math.floor(Math.random() * (70 - 40) + 40);
+                    if (player.hp[0] > player.hp[1]) {
+                        player.hp[0] = player.hp[1];
+                    }
+                },
+            },
+            manaPotion: {
+                name: 'Mana Potion',
+                description: 'Recovers a small amount of mana.',
+                stackable: true,
+                price: 60,
+                use() {
+                    player.mana[0] += Math.floor(Math.random() * (85 - 50) + 50);
+                    if (player.mana[0] > player.mana[1]) {
+                        player.mana[0] = player.mana[1];
+                    }
+                },
+            },
+            antidote: {
+                name: 'Antidote',
+                description: 'Cures [Poison] status.',
+                stackable: true,
+                price: 100,
+                use() {
+                    if (player.status.some(element => element.name === 'Poison')) {
+                        for (let i = 0; i < player.status.length; i++) {
+                            if (player.status[i].name === 'Poison') {
+                                player.status.splice(i, 1);
+                            }
+                        }
+                    }
+                },
+            },
+        },
+        foods: {
+            cheese: {
+                name: 'Cheese',
+                description: 'A slice of cheese. Heals for a very small amount',
+                stackable: true,
+                price: 15,
+                use() {
+                    player.hp[0] += Math.floor(Math.random() * (20 - 10) + 10);
+                    player.mana[0] += Math.floor(Math.random() * (15 - 5) + 5);
+                    if (player.hp[0] > player.hp[1]) {
+                        player.hp[0] = player.hp[1];
+                    }
+                    if (player.mana[0] > player.mana[1]) {
+                        player.mana[0] = player.mana[1];
+                    }
+                },
+            },
+        },
+    },
+    miscellaneous: {
+        creatures: {
+            ratFlesh: {
+                name: 'Rat Flesh',
+                description: 'Just a piece of flesh, maybe someone on the market wants this.',
+                stackable: true,
+                price: 5,
+            },
+            spiderFangs: {
+                name: 'Spider Fangs',
+                description: 'Fangs of a spider, maybe someone on the market wants this.',
+                stackable: true,
+                price: 7,
+            },
+        },
+        quests: {
+            purpleRock: {
+                name: 'Purple Rock',
+                description:
+                    'A piece of a purple pigmented rock. You can feel a weak aura coming out of it, like a curse.',
+                stackable: false,
+            },
         },
     },
 };

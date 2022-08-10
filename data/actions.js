@@ -43,6 +43,7 @@ const action = {
     inventory() {
         console.log(`\n[Inventory max size: ${player.equipment.backpack.size}]`);
         console.log(player.items, `\n`);
+        //Add commands to check, equip, use or discard items.
     },
     travel(newLocation) {
         let validation = location[player.location].direction.includes(newLocation);
