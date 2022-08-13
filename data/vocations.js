@@ -1,13 +1,13 @@
 const { player, expTable } = require('./player');
-const { item } = require('./items');
+const { database } = require('./items');
 
 const vocation = {
     knight: {
         name: 'Knight',
         startingEquipment() {
-            player.equipment.weapon = item.weapons.swords.woodenSword;
-            player.equipment.shield = item.shields.woodenShield;
-            player.equipment.armor = item.armors.leatherArmor;
+            player.equipment.weapon = database.weapons.swords.woodenSword;
+            player.equipment.shield = database.shields.woodenShield;
+            player.equipment.armor = database.armors.leatherArmor;
             player.equipWeapon();
             player.equipShield();
             player.equipArmor();
@@ -32,8 +32,8 @@ const vocation = {
     mage: {
         name: 'Mage',
         startingEquipment() {
-            player.equipment.weapon = item.weapons.rods.apprenticeRod;
-            player.equipment.armor = item.armors.coat;
+            player.equipment.weapon = database.weapons.rods.apprenticeRod;
+            player.equipment.armor = database.armors.coat;
             player.equipWeapon();
             player.equipArmor();
         },
@@ -57,8 +57,8 @@ const vocation = {
     archer: {
         name: 'Archer',
         startingEquipment() {
-            player.equipment.weapon = item.weapons.bows.shortBow;
-            player.equipment.armor = item.armors.leatherArmor;
+            player.equipment.weapon = database.weapons.bows.shortBow;
+            player.equipment.armor = database.armors.leatherArmor;
             player.equipWeapon();
             player.equipArmor();
         },

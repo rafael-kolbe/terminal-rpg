@@ -1,4 +1,4 @@
-const { item } = require('./items');
+const { database } = require('./items');
 
 const expTable = [];
 for (let i = 1; i <= 100; i++) {
@@ -25,7 +25,7 @@ let player = {
         armor: '',
         necklace: '',
         ring: '',
-        backpack: item.backpacks.bag,
+        backpack: database.backpacks.bag,
     },
     items: [],
     spells: [],

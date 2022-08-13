@@ -14,18 +14,17 @@ const action = {
         console.log(`[Status: ${player.status}]\n`);
     },
     equipment() {
-        let isTwoHanded = player.equipment.weapon.twoHanded ? 'Two-Handed Weapon' : 'One-Handed Weapon';
+        //let isTwoHanded = player.equipment.weapon.twoHanded ? 'Two-Handed Weapon' : 'One-Handed Weapon';
         player.equipment.weapon
-            ? console.log(
-                  `\n[Weapon: ${player.equipment.weapon.name}, Atk: ${player.equipment.weapon.atk}, M.Atk: ${player.equipment.weapon.magicAtk}, Def: ${player.equipment.weapon.def}, ${isTwoHanded}]`,
-              )
+            ? console.log(`\n[Weapon: ${player.equipment.weapon.name}, ${player.equipment.weapon.description}]`)
             : console.log('[Weapon: Not Equipped]');
+
         player.equipment.shield
-            ? console.log(`[Shield: ${player.equipment.shield.name}, Def: ${player.equipment.shield.def}]`)
+            ? console.log(`[Shield: ${player.equipment.shield.name}, ${player.equipment.shield.description}]`)
             : console.log('[Shield: Not Equipped]');
 
         player.equipment.armor
-            ? console.log(`[Armor: ${player.equipment.armor.name}, Armor: ${player.equipment.armor.arm}]`)
+            ? console.log(`[Armor: ${player.equipment.armor.name}, ${player.equipment.armor.description}]`)
             : console.log('[Armor: Not Equipped]');
 
         player.equipment.necklace
@@ -38,12 +37,19 @@ const action = {
             ? console.log(`[Ring: ${player.equipment.ring.name}]`)
             : console.log('[Ring: Not Equipped]');
 
-        console.log(`[Backpack: ${player.equipment.backpack.name}, Size: ${player.equipment.backpack.size}]\n`);
+        console.log(`[Backpack: ${player.equipment.backpack.name}, ${player.equipment.backpack.description}]\n`);
     },
     inventory() {
-        console.log(`\n[Inventory max size: ${player.equipment.backpack.size}]`);
-        console.log(player.items, `\n`);
+        console.log(`\n[Inventory: ${player.items.length} / ${player.equipment.backpack.size}]`);
+        console.log(this.showInventory(player.items), `\n`);
         //Add commands to check, equip, use or discard items.
+    },
+    showInventory(arrItems) {
+        let inventory = [];
+        for (let obj of arrItems) {
+            inventory.push(`${obj.item.name} (${obj.qty})`);
+        }
+        return inventory;
     },
     travel(newLocation) {
         let validation = location[player.location].direction.includes(newLocation);

@@ -4,6 +4,7 @@ const { vocation } = require('./data/vocations');
 const { location } = require('./data/locations');
 const { action } = require('./data/actions');
 const { spell } = require('./data/spells');
+const { database } = require('./data/items');
 
 //input enable
 const prompt = require('prompt-sync')({ sigint: true });
@@ -44,16 +45,58 @@ while (!vocationSet) {
     }
 }
 
+addItem(database.usable.potions.lifePotion, 1);
+addItem(database.usable.potions.lifePotion, 3);
+addItem(database.usable.potions.manaPotion, 2);
+
 while (gameState) {
     while (player.location === 'city' && player.mode === 'idle' && gameState) {
         console.log(`You are currently at [${player.location}]`);
-        let playerAction = prompt('Choose an action => [status][equipment][inventory][travel][restore][exit]: ');
-        if (playerAction === 'status') {
-            action.status();
-        } else if (playerAction === 'equipment') {
-            action.equipment();
-        } else if (playerAction === 'inventory') {
-            action.inventory();
+        let playerAction = prompt('Choose an action => [view][travel][restore][exit]: ');
+        if (playerAction === 'view') {
+            playerAction = prompt('Choose to view => [status][equipment][inventory]: ');
+            if (playerAction === 'status') {
+                action.status();
+            } else if (playerAction === 'equipment') {
+                action.equipment();
+            } else if (playerAction === 'inventory') {
+                action.inventory();
+                let atInventory = true;
+                while (atInventory) {
+                    playerAction = prompt('Choose an action + item name => [look][equip][use][discard] or [back]: ');
+                    if (playerAction === 'back') {
+                        atInventory = false;
+                        console.log('');
+                    } else {
+                        let actionChosen = playerAction.split(' ')[0];
+                        let itemChosen = '';
+                        for (let i = 0; i < playerAction.length; i++) {
+                            if (playerAction[i] === ' ') {
+                                itemChosen = playerAction.slice(i + 1);
+                                break;
+                            }
+                        }
+                        if (actionChosen === 'look' && player.items.includes(itemChosen)) {
+                            //look item
+                            action.lookItem(itemChosen);
+                        } else if (actionChosen === 'equip' && player.items.includes(itemChosen)) {
+                            //equip item
+                            action.equipItem(itemChosen);
+                        } else if (actionChosen === 'use' && player.items.includes(itemChosen)) {
+                            //use item
+                            action.useItem(itemChosen);
+                        } else if (actionChosen === 'discard' && player.items.includes(itemChosen)) {
+                            //discard item
+                            playerAction = prompt('Choose a number to discard or [all]: ');
+                            action.discardItem(itemChosen, playerAction);
+                        } else {
+                            console.log('\nAction invalid.\n');
+                        }
+                    }
+                }
+            } else {
+                console.log('\nAction invalid.\n');
+            }
         } else if (playerAction === 'travel') {
             action.travel(prompt(`Choose a location to travel to => ${possibleDirections()}: `));
         } else if (playerAction === 'restore') {
@@ -67,13 +110,18 @@ while (gameState) {
 
     while ((player.location === 'cave' || player.location === 'outskirts') && player.mode === 'idle') {
         console.log(`You are currently at [${player.location}]`);
-        let playerAction = prompt('Choose an action => [status][equipment][inventory][travel][hunt]: ');
-        if (playerAction === 'status') {
-            action.status();
-        } else if (playerAction === 'equipment') {
-            action.equipment();
-        } else if (playerAction === 'inventory') {
-            action.inventory();
+        let playerAction = prompt('Choose an action => [view][travel][hunt]: ');
+        if (playerAction === 'view') {
+            playerAction = prompt('Choose to view => [status][equipment][inventory]: ');
+            if (playerAction === 'status') {
+                action.status();
+            } else if (playerAction === 'equipment') {
+                action.equipment();
+            } else if (playerAction === 'inventory') {
+                action.inventory();
+            } else {
+                console.log('\nAction invalid.\n');
+            }
         } else if (playerAction === 'travel') {
             action.travel(prompt(`Choose a location to travel to => ${possibleDirections()}: `));
         } else if (playerAction === 'hunt') {
@@ -234,6 +282,25 @@ function finishBattle() {
     }
     player.mode = 'idle';
     turn = 'standby';
+}
+
+function addItem(objItem, qty) {
+    if (player.items.some(obj => obj.item.id === objItem.id)) {
+        for (let obj of player.items) {
+            if (obj.item.id === objItem.id) {
+                obj.qty += qty;
+            }
+        }
+    } else {
+        if (player.items.length !== player.equipment.backpack.size) {
+            player.items.push({
+                item: objItem,
+                qty: qty,
+            });
+        } else {
+            console.log('Inventory full');
+        }
+    }
 }
 
 function exit() {

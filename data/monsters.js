@@ -1,6 +1,6 @@
 const { monsterScript } = require('./scripts');
 const { monsterAbility } = require('./spells');
-const { item } = require('./items');
+const { database } = require('./items');
 
 const monster = {
     Rat: class {
@@ -13,12 +13,12 @@ const monster = {
             this.gold = Math.floor(Math.random() * (5 - 2) + 2);
             this.drop = [
                 {
-                    item: item.miscellaneous.creatures.ratFlesh,
+                    item: database.miscellaneous.creatures.ratFlesh,
                     dropRate: 50,
                     qty: 1,
                 },
                 {
-                    item: item.usable.foods.cheese,
+                    item: database.usable.foods.cheese,
                     dropRate: 20,
                     qty: 1,
                 },
@@ -38,7 +38,7 @@ const monster = {
             this.gold = Math.floor(Math.random() * (8 - 3) + 3);
             this.drop = [
                 {
-                    item: item.miscellaneous.creatures.spiderFangs,
+                    item: database.miscellaneous.creatures.spiderFangs,
                     dropRate: 70,
                     qty: 1,
                 },
@@ -59,12 +59,12 @@ const monster = {
             this.gold = Math.floor(Math.random() * (25 - 15) + 15);
             this.drop = [
                 {
-                    item: item.miscellaneous.creatures.ratFlesh,
+                    item: database.miscellaneous.creatures.ratFlesh,
                     dropRate: 90,
                     qty: 1,
                 },
                 {
-                    item: item.miscellaneous.quests.purpleRock,
+                    item: database.miscellaneous.quests.purpleRock,
                     dropRate: 10,
                     qty: 1,
                 },
