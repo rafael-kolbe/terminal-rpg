@@ -7,7 +7,7 @@ const monster = {
         constructor() {
             this.name = 'Rat';
             this.level = 1;
-            this.expGain = 100;
+            this.expGain = 10;
             this.hp = [20, 20];
             this.atk = 10;
             this.gold = Math.floor(Math.random() * (5 - 2) + 2);
@@ -32,7 +32,7 @@ const monster = {
         constructor() {
             this.name = 'Spider';
             this.level = 2;
-            this.expGain = 300;
+            this.expGain = 15;
             this.hp = [30, 30];
             this.atk = 15;
             this.gold = Math.floor(Math.random() * (8 - 3) + 3);

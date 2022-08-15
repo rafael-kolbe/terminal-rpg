@@ -21,7 +21,6 @@ console.log(`\nHello adventure ${player.name}!\n`);
 
 while (!vocationSet) {
     const vocationChosen = prompt(`Please, choose a vocation => [knight][mage][archer]: `);
-    //Add toLowerCase();
     if (vocationChosen === 'knight') {
         player.vocation = vocation.knight;
         vocation.knight.startingEquipment();
@@ -45,9 +44,11 @@ while (!vocationSet) {
     }
 }
 
-addItem(database.usable.potions.lifePotion, 1);
-addItem(database.usable.potions.lifePotion, 3);
-addItem(database.usable.potions.manaPotion, 2);
+action.addItem(database.usable.potions.lifePotion, 1);
+action.addItem(database.usable.potions.lifePotion, 3);
+action.addItem(database.usable.potions.manaPotion, 2);
+action.addItem(database.armors.brassArmor, 1);
+action.addItem(database.shields.dragonShield, 1);
 
 while (gameState) {
     while (player.location === 'city' && player.mode === 'idle' && gameState) {
@@ -78,20 +79,29 @@ while (gameState) {
                                 break;
                             }
                         }
-                        if (actionChosen === 'look' && player.items.find(obj => obj.item.name === itemChosen)) {
+                        if (actionChosen === 'look' && player.items.some(obj => obj.item.name === itemChosen)) {
                             action.lookItem(itemChosen);
-                        } else if (actionChosen === 'equip' && player.items.find(obj => obj.item.name === itemChosen)) {
-                            //equip item
-                            action.equipItem(itemChosen);
-                        } else if (actionChosen === 'use' && player.items.find(obj => obj.item.name === itemChosen)) {
-                            //use item
-                            action.useItem(itemChosen);
-                        } else if (actionChosen === 'discard' && player.items.find(obj => obj.item.name === itemChosen)) {
+                        } else if (actionChosen === 'equip' && player.items.some(obj => obj.item.name === itemChosen)) {
+                            let objChosen = player.items.find(obj => obj.item.name === itemChosen);
+                            if (objChosen.item.id[0] === '1') {
+                                action.equipItem(itemChosen);
+                            } else {
+                                console.log('\nAction invalid.\n');
+                            }
+                        } else if (actionChosen === 'use' && player.items.some(obj => obj.item.name === itemChosen)) {
+                            let objChosen = player.items.find(obj => obj.item.name === itemChosen);
+                            if (objChosen.item.id[0] === '2') {
+                                action.useItem(itemChosen);
+                            } else {
+                                console.log('\nAction invalid.\n');
+                            }
+                        } else if (actionChosen === 'discard' && player.items.some(obj => obj.item.name === itemChosen)) {
                             playerAction = prompt('Choose a number to discard or [all]: ');
                             if (playerAction !== 'all') {
                                 playerAction = Number(playerAction);
                             }
                             action.discardItem(itemChosen, playerAction);
+                            console.log(`\nYou discarded ${playerAction} ${itemChosen}(s).\n`);
                         } else {
                             console.log('\nAction invalid.\n');
                         }
@@ -285,25 +295,6 @@ function finishBattle() {
     }
     player.mode = 'idle';
     turn = 'standby';
-}
-
-function addItem(objItem, qty) {
-    if (player.items.some(obj => obj.item.id === objItem.id)) {
-        for (let obj of player.items) {
-            if (obj.item.id === objItem.id) {
-                obj.qty += qty;
-            }
-        }
-    } else {
-        if (player.items.length !== player.equipment.backpack.size) {
-            player.items.push({
-                item: objItem,
-                qty: qty,
-            });
-        } else {
-            console.log('Inventory full');
-        }
-    }
 }
 
 function exit() {

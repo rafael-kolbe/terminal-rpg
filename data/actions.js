@@ -46,21 +46,109 @@ const action = {
         }
         return inventory;
     },
+    addItem(objItem, qty) {
+        if (player.items.some(obj => obj.item.id === objItem.id)) {
+            for (let obj of player.items) {
+                if (obj.item.id === objItem.id) {
+                    obj.qty += qty;
+                }
+            }
+        } else {
+            if (player.items.length !== player.equipment.backpack.size) {
+                player.items.push({
+                    item: objItem,
+                    qty: qty,
+                });
+            } else {
+                console.log('Inventory full');
+            }
+        }
+    },
     lookItem(itemChosen) {
         const objChosen = player.items.find(obj => obj.item.name === itemChosen);
         console.log(`\n${objChosen.item.description}\n`);
     },
-    equipItem() {},
-    useItem() {},
+    equipItem(itemChosen) {
+        //to do
+        const objChosen = player.items.find(obj => obj.item.name === itemChosen);
+        if (Number(objChosen.item.id) < 1500) {
+            switch (player.vocation) {
+                case 'knight':
+                    //to do
+                    break;
+                case 'mage':
+                    //to do
+                    break;
+                case 'archer':
+                    //to do
+                    break;
+            }
+        } else if (Number(objChosen.item.id > 1500 && Number(objChosen.item.id < 1600))) {
+            if (player.equipment.armor) {
+                this.addItem(player.equipment.armor, 1);
+                player.unequipArmor();
+            }
+            player.equipArmor(objChosen.item);
+            this.discardItem(objChosen.item.name, 1);
+            console.log(`\n${objChosen.item.name} was equipped.\n`);
+        } else if (Number(objChosen.item.id > 1600 && Number(objChosen.item.id < 1700))) {
+            if (player.equipment.shield) {
+                this.addItem(player.equipment.shield, 1);
+                player.unequipShield();
+            }
+            player.equipShield(objChosen.item);
+            this.discardItem(objChosen.item.name, 1);
+            console.log(`\n${objChosen.item.name} was equipped.\n`);
+        }
+        if (player.equipment.weapon.twoHanded && player.equipment.shield) {
+            console.log(`\n${player.equipment.shield} was unequipped due to the weapon being a Two-handed type.\n`);
+            player.unequipShield();
+        }
+    },
+    useItem(itemChosen) {
+        const objChosen = player.items.find(obj => obj.item.name === itemChosen);
+        console.log(`\nYou used a ${itemChosen}.`);
+        const itemEffect = objChosen.item.use();
+        if (itemEffect[0] === 'life') {
+            player.hp[0] += itemEffect[1];
+            if (player.hp[0] > player.hp[1]) {
+                player.hp[0] = player.hp[1];
+            }
+            console.log(`You recovered ${itemEffect[1]} hp.\n`);
+        } else if (itemEffect[0] === 'mana') {
+            player.mana[0] += itemEffect[1];
+            if (player.mana[0] > player.mana[1]) {
+                player.mana[0] = player.mana[1];
+            }
+            console.log(`You recovered ${itemEffect[1]} mana.\n`);
+        } else if (itemEffect[0] === 'status') {
+            if (itemEffect[1] === 'Poison') {
+                if (player.status.some(obj => obj.name === 'Poison')) {
+                    const objIndex = player.status.findIndex(obj => obj.name === 'Poison');
+                    player.status.splice(objIndex, 1);
+                    console.log(`You are no longer poisoned.\n`);
+                } else {
+                    console.log(`You were not poisoned.\n`);
+                }
+            }
+        }
+
+        objChosen.qty--;
+        if (objChosen.qty === 0) {
+            const objIndex = player.items.findIndex(obj => obj.item.name === itemChosen);
+            player.items.splice(objIndex, 1);
+        }
+    },
     discardItem(itemChosen, numToDiscard) {
         const objChosen = player.items.find(obj => obj.item.name === itemChosen);
         const objIndex = player.items.findIndex(obj => obj.item.name === itemChosen);
         if (numToDiscard === 'all') {
             player.items.splice(objIndex, 1);
-            console.log(`\n${itemChosen} was discarded from the inventory.\n`);
-        } else if (numToDiscard < objChosen.qty) {
+        } else if (numToDiscard <= objChosen.qty) {
             objChosen.qty -= numToDiscard;
-            console.log(`\nYou discarded ${numToDiscard} ${itemChosen}(s).\n`);
+            if (objChosen.qty === 0) {
+                player.items.splice(objIndex, 1);
+            }
         } else {
             console.log('\nAction Invalid.\n');
         }

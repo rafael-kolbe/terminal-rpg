@@ -310,10 +310,13 @@ const database = {
                 description: 'Heals for a small amount, tastes like strawberries.',
                 price: 50,
                 use() {
-                    player.hp[0] += Math.floor(Math.random() * (70 - 40) + 40);
-                    if (player.hp[0] > player.hp[1]) {
-                        player.hp[0] = player.hp[1];
-                    }
+                    const recover = Math.floor(Math.random() * (70 - 40) + 40);
+                    return ['life', recover];
+                    // player.hp[0] += recover;
+                    // if (player.hp[0] > player.hp[1]) {
+                    //     player.hp[0] = player.hp[1];
+                    // }
+                    // console.log(`You recovered ${recover} hp.\n`);
                 },
             },
             manaPotion: {
@@ -322,10 +325,13 @@ const database = {
                 description: 'Recovers a small amount of mana.',
                 price: 60,
                 use() {
-                    player.mana[0] += Math.floor(Math.random() * (85 - 50) + 50);
-                    if (player.mana[0] > player.mana[1]) {
-                        player.mana[0] = player.mana[1];
-                    }
+                    const recover = Math.floor(Math.random() * (85 - 50) + 50);
+                    return ['mana', recover];
+                    // player.mana[0] += recover;
+                    // if (player.mana[0] > player.mana[1]) {
+                    //     player.mana[0] = player.mana[1];
+                    // }
+                    // console.log(`You recovered ${recover} mana.\n`);
                 },
             },
             antidote: {
@@ -334,13 +340,12 @@ const database = {
                 description: 'Cures [Poison] status.',
                 price: 100,
                 use() {
-                    if (player.status.some(element => element.name === 'Poison')) {
-                        for (let i = 0; i < player.status.length; i++) {
-                            if (player.status[i].name === 'Poison') {
-                                player.status.splice(i, 1);
-                            }
-                        }
-                    }
+                    return ['status', 'Poison'];
+                    // if (player.status.some(obj => obj.name === 'Poison')) {
+                    //     const objIndex = player.status.findIndex(obj => obj.name === 'Poison');
+                    //     player.status.splice(objIndex, 1);
+                    //     console.log(`You are no longer poisoned.\n`);
+                    // }
                 },
             },
         },
@@ -382,8 +387,7 @@ const database = {
             purpleRock: {
                 id: '3301',
                 name: 'Purple Rock',
-                description:
-                    'A piece of a purple pigmented rock. You can feel a weak aura coming out of it, like a curse.',
+                description: 'A piece of a purple pigmented rock. You can feel a weak aura coming out of it, like a curse.',
             },
         },
     },

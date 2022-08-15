@@ -5,12 +5,9 @@ const vocation = {
     knight: {
         name: 'Knight',
         startingEquipment() {
-            player.equipment.weapon = database.weapons.swords.woodenSword;
-            player.equipment.shield = database.shields.woodenShield;
-            player.equipment.armor = database.armors.leatherArmor;
-            player.equipWeapon();
-            player.equipShield();
-            player.equipArmor();
+            player.equipWeapon(database.weapons.swords.woodenSword);
+            player.equipShield(database.shields.woodenShield);
+            player.equipArmor(database.armors.leatherArmor);
         },
         levelUp() {
             player.level++;
@@ -32,10 +29,8 @@ const vocation = {
     mage: {
         name: 'Mage',
         startingEquipment() {
-            player.equipment.weapon = database.weapons.rods.apprenticeRod;
-            player.equipment.armor = database.armors.coat;
-            player.equipWeapon();
-            player.equipArmor();
+            player.equipWeapon(database.weapons.rods.apprenticeRod);
+            player.equipArmor(database.armors.coat);
         },
         levelUp() {
             player.level++;
@@ -57,10 +52,8 @@ const vocation = {
     archer: {
         name: 'Archer',
         startingEquipment() {
-            player.equipment.weapon = database.weapons.bows.shortBow;
-            player.equipment.armor = database.armors.leatherArmor;
-            player.equipWeapon();
-            player.equipArmor();
+            player.equipWeapon(database.weapons.bows.shortBow);
+            player.equipArmor(database.armors.leatherArmor);
         },
         levelUp() {
             player.level++;

@@ -31,7 +31,8 @@ let player = {
     spells: [],
     location: 'city',
     mode: 'idle',
-    equipWeapon() {
+    equipWeapon(obj) {
+        this.equipment.weapon = obj;
         this.atk += this.equipment.weapon.atk;
         this.magicAtk += this.equipment.weapon.magicAtk;
         this.def += this.equipment.weapon.def;
@@ -40,18 +41,23 @@ let player = {
         this.atk -= this.equipment.weapon.atk;
         this.magicAtk -= this.equipment.weapon.magicAtk;
         this.def -= this.equipment.weapon.def;
+        this.equipment.weapon = '';
     },
-    equipShield() {
+    equipShield(obj) {
+        this.equipment.shield = obj;
         this.def += this.equipment.shield.def;
     },
     unequipShield() {
         this.def -= this.equipment.shield.def;
+        this.equipment.shield = '';
     },
-    equipArmor() {
+    equipArmor(obj) {
+        this.equipment.armor = obj;
         this.armor += this.equipment.armor.arm;
     },
     unequipArmor() {
         this.armor -= this.equipment.armor.arm;
+        this.equipment.armor = '';
     },
     attack() {
         if (this.vocation.name === 'Knight') {
