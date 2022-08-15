@@ -60,9 +60,11 @@ while (gameState) {
             } else if (playerAction === 'equipment') {
                 action.equipment();
             } else if (playerAction === 'inventory') {
-                action.inventory();
+                console.log('');
+                console.log(player.items); // <= for testing, remember to remove it.
                 let atInventory = true;
                 while (atInventory) {
+                    action.inventory();
                     playerAction = prompt('Choose an action + item name => [look][equip][use][discard] or [back]: ');
                     if (playerAction === 'back') {
                         atInventory = false;
@@ -76,18 +78,19 @@ while (gameState) {
                                 break;
                             }
                         }
-                        if (actionChosen === 'look' && player.items.includes(itemChosen)) {
-                            //look item
+                        if (actionChosen === 'look' && player.items.find(obj => obj.item.name === itemChosen)) {
                             action.lookItem(itemChosen);
-                        } else if (actionChosen === 'equip' && player.items.includes(itemChosen)) {
+                        } else if (actionChosen === 'equip' && player.items.find(obj => obj.item.name === itemChosen)) {
                             //equip item
                             action.equipItem(itemChosen);
-                        } else if (actionChosen === 'use' && player.items.includes(itemChosen)) {
+                        } else if (actionChosen === 'use' && player.items.find(obj => obj.item.name === itemChosen)) {
                             //use item
                             action.useItem(itemChosen);
-                        } else if (actionChosen === 'discard' && player.items.includes(itemChosen)) {
-                            //discard item
+                        } else if (actionChosen === 'discard' && player.items.find(obj => obj.item.name === itemChosen)) {
                             playerAction = prompt('Choose a number to discard or [all]: ');
+                            if (playerAction !== 'all') {
+                                playerAction = Number(playerAction);
+                            }
                             action.discardItem(itemChosen, playerAction);
                         } else {
                             console.log('\nAction invalid.\n');
@@ -145,9 +148,9 @@ while (gameState) {
 
                 for (let i = 0; i < arrMonster.length; i++) {
                     console.log(
-                        `[${i + 1}. ${arrMonster[i].name}, Level: ${arrMonster[i].level}, Hp: ${
-                            arrMonster[i].hp[0]
-                        } / ${arrMonster[i].hp[1]}]`,
+                        `[${i + 1}. ${arrMonster[i].name}, Level: ${arrMonster[i].level}, Hp: ${arrMonster[i].hp[0]} / ${
+                            arrMonster[i].hp[1]
+                        }]`,
                     );
                 }
                 console.log(``);

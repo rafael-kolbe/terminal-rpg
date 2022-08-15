@@ -57,9 +57,12 @@ let player = {
         if (this.vocation.name === 'Knight') {
             return Math.floor(Math.random() * (this.atk * 1.2 - this.atk * 0.8) + this.atk * 0.8);
         } else if (this.vocation.name === 'Mage') {
-            if (player.equipment.weapon) {
-                player.mana[0] -= player.equipment.weapon.manaCost;
-                return Math.floor(Math.random() * (this.magicAtk * 1.8 - this.magicAtk * 1) + this.magicAtk * 1);
+            if (this.equipment.weapon) {
+                this.mana[0] -= this.equipment.weapon.manaCost;
+                return Math.floor(
+                    Math.random() * (this.equipment.weapon.magicAtk + 7 - this.equipment.weapon.magicAtk) +
+                        this.equipment.weapon.magicAtk,
+                );
             }
             return Math.floor(Math.random() * (this.atk * 1 - this.atk * 0.5) + this.atk * 0.5);
         } else if (this.vocation.name === 'Archer') {

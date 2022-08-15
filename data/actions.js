@@ -14,7 +14,6 @@ const action = {
         console.log(`[Status: ${player.status}]\n`);
     },
     equipment() {
-        //let isTwoHanded = player.equipment.weapon.twoHanded ? 'Two-Handed Weapon' : 'One-Handed Weapon';
         player.equipment.weapon
             ? console.log(`\n[Weapon: ${player.equipment.weapon.name}, ${player.equipment.weapon.description}]`)
             : console.log('[Weapon: Not Equipped]');
@@ -28,19 +27,15 @@ const action = {
             : console.log('[Armor: Not Equipped]');
 
         player.equipment.necklace
-            ? console.log(
-                  `[Necklace: ${player.equipment.necklace.name}, Charges: ${player.equipment.necklace.charges}]`,
-              )
+            ? console.log(`[Necklace: ${player.equipment.necklace.name}, Charges: ${player.equipment.necklace.charges}]`)
             : console.log('[Necklace: Not Equipped]');
 
-        player.equipment.ring
-            ? console.log(`[Ring: ${player.equipment.ring.name}]`)
-            : console.log('[Ring: Not Equipped]');
+        player.equipment.ring ? console.log(`[Ring: ${player.equipment.ring.name}]`) : console.log('[Ring: Not Equipped]');
 
         console.log(`[Backpack: ${player.equipment.backpack.name}, ${player.equipment.backpack.description}]\n`);
     },
     inventory() {
-        console.log(`\n[Inventory: ${player.items.length} / ${player.equipment.backpack.size}]`);
+        console.log(`[Inventory: ${player.items.length} / ${player.equipment.backpack.size}]`);
         console.log(this.showInventory(player.items), `\n`);
         //Add commands to check, equip, use or discard items.
     },
@@ -50,6 +45,25 @@ const action = {
             inventory.push(`${obj.item.name} (${obj.qty})`);
         }
         return inventory;
+    },
+    lookItem(itemChosen) {
+        const objChosen = player.items.find(obj => obj.item.name === itemChosen);
+        console.log(`\n${objChosen.item.description}\n`);
+    },
+    equipItem() {},
+    useItem() {},
+    discardItem(itemChosen, numToDiscard) {
+        const objChosen = player.items.find(obj => obj.item.name === itemChosen);
+        const objIndex = player.items.findIndex(obj => obj.item.name === itemChosen);
+        if (numToDiscard === 'all') {
+            player.items.splice(objIndex, 1);
+            console.log(`\n${itemChosen} was discarded from the inventory.\n`);
+        } else if (numToDiscard < objChosen.qty) {
+            objChosen.qty -= numToDiscard;
+            console.log(`\nYou discarded ${numToDiscard} ${itemChosen}(s).\n`);
+        } else {
+            console.log('\nAction Invalid.\n');
+        }
     },
     travel(newLocation) {
         let validation = location[player.location].direction.includes(newLocation);
