@@ -48,7 +48,9 @@ action.addItem(database.usable.potions.lifePotion, 1);
 action.addItem(database.usable.potions.lifePotion, 3);
 action.addItem(database.usable.potions.manaPotion, 2);
 action.addItem(database.armors.brassArmor, 1);
-action.addItem(database.shields.dragonShield, 1);
+action.addItem(database.shields.dragonShield, 2);
+action.addItem(database.weapons.axes.lumberjackAxe, 1);
+action.addItem(database.weapons.rods.tempestRod, 1);
 
 while (gameState) {
     while (player.location === 'city' && player.mode === 'idle' && gameState) {
@@ -62,7 +64,6 @@ while (gameState) {
                 action.equipment();
             } else if (playerAction === 'inventory') {
                 console.log('');
-                console.log(player.items); // <= for testing, remember to remove it.
                 let atInventory = true;
                 while (atInventory) {
                     action.inventory();
@@ -85,6 +86,7 @@ while (gameState) {
                             let objChosen = player.items.find(obj => obj.item.name === itemChosen);
                             if (objChosen.item.id[0] === '1') {
                                 action.equipItem(itemChosen);
+                                action.equipment();
                             } else {
                                 console.log('\nAction invalid.\n');
                             }
@@ -92,6 +94,10 @@ while (gameState) {
                             let objChosen = player.items.find(obj => obj.item.name === itemChosen);
                             if (objChosen.item.id[0] === '2') {
                                 action.useItem(itemChosen);
+                                console.log(
+                                    `[Hp: ${player.hp[0]} / ${player.hp[1]}, Mana: ${player.mana[0]} / ${player.mana[1]}]`,
+                                );
+                                console.log(`[Status: ${action.showStatus(player.status)}]\n`);
                             } else {
                                 console.log('\nAction invalid.\n');
                             }
@@ -131,7 +137,56 @@ while (gameState) {
             } else if (playerAction === 'equipment') {
                 action.equipment();
             } else if (playerAction === 'inventory') {
-                action.inventory();
+                console.log('');
+                let atInventory = true;
+                while (atInventory) {
+                    action.inventory();
+                    playerAction = prompt('Choose an action + item name => [look][equip][use][discard] or [back]: ');
+                    if (playerAction === 'back') {
+                        atInventory = false;
+                        console.log('');
+                    } else {
+                        let actionChosen = playerAction.split(' ')[0];
+                        let itemChosen = '';
+                        for (let i = 0; i < playerAction.length; i++) {
+                            if (playerAction[i] === ' ') {
+                                itemChosen = playerAction.slice(i + 1);
+                                break;
+                            }
+                        }
+                        if (actionChosen === 'look' && player.items.some(obj => obj.item.name === itemChosen)) {
+                            action.lookItem(itemChosen);
+                        } else if (actionChosen === 'equip' && player.items.some(obj => obj.item.name === itemChosen)) {
+                            let objChosen = player.items.find(obj => obj.item.name === itemChosen);
+                            if (objChosen.item.id[0] === '1') {
+                                action.equipItem(itemChosen);
+                                action.equipment();
+                            } else {
+                                console.log('\nAction invalid.\n');
+                            }
+                        } else if (actionChosen === 'use' && player.items.some(obj => obj.item.name === itemChosen)) {
+                            let objChosen = player.items.find(obj => obj.item.name === itemChosen);
+                            if (objChosen.item.id[0] === '2') {
+                                action.useItem(itemChosen);
+                                console.log(
+                                    `[Hp: ${player.hp[0]} / ${player.hp[1]}, Mana: ${player.mana[0]} / ${player.mana[1]}]`,
+                                );
+                                console.log(`[Status: ${action.showStatus(player.status)}]\n`);
+                            } else {
+                                console.log('\nAction invalid.\n');
+                            }
+                        } else if (actionChosen === 'discard' && player.items.some(obj => obj.item.name === itemChosen)) {
+                            playerAction = prompt('Choose a number to discard or [all]: ');
+                            if (playerAction !== 'all') {
+                                playerAction = Number(playerAction);
+                            }
+                            action.discardItem(itemChosen, playerAction);
+                            console.log(`\nYou discarded ${playerAction} ${itemChosen}(s).\n`);
+                        } else {
+                            console.log('\nAction invalid.\n');
+                        }
+                    }
+                }
             } else {
                 console.log('\nAction invalid.\n');
             }

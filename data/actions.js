@@ -3,6 +3,8 @@ const { location } = require('./locations');
 const { monster } = require('./monsters');
 const { vocation } = require('./vocations');
 
+const prompt = require('prompt-sync')({ sigint: true });
+
 const action = {
     status() {
         console.log(`\n[${player.name}, ${player.vocation.name}, Level: ${player.level}]`);
@@ -11,7 +13,14 @@ const action = {
         console.log(`[Mana: ${player.mana[0] + ' / ' + player.mana[1]}]`);
         console.log(`[Atk: ${player.atk}, Magic Atk: ${player.magicAtk}]`);
         console.log(`[Armor: ${player.armor}, Defense: ${player.def}]`);
-        console.log(`[Status: ${player.status}]\n`);
+        console.log(`[Status: ${this.showStatus(player.status)}]\n`);
+    },
+    showStatus(arrStatus) {
+        let status = [];
+        for (let obj of arrStatus) {
+            status.push(`${obj.name} (${obj.duration})`);
+        }
+        return status;
     },
     equipment() {
         player.equipment.weapon
@@ -54,13 +63,22 @@ const action = {
                 }
             }
         } else {
-            if (player.items.length !== player.equipment.backpack.size) {
-                player.items.push({
-                    item: objItem,
-                    qty: qty,
-                });
-            } else {
-                console.log('Inventory full');
+            player.items.push({
+                item: objItem,
+                qty: qty,
+            });
+
+            //Inventory full
+            while (player.items.length > player.equipment.backpack.size) {
+                console.log('\nYou have more items than you can carry, please discard items until your backpack is full.');
+                this.inventory();
+                const discardThis = prompt(`Choose an item to discard: `);
+                if (player.items.some(obj => obj.item.name === discardThis)) {
+                    console.log(`\nYou discarded your stack of ${discardThis}.`);
+                    this.discardItem(discardThis, 'all');
+                } else {
+                    console.log(`\nItem Invalid.\n`);
+                }
             }
         }
     },
@@ -69,19 +87,51 @@ const action = {
         console.log(`\n${objChosen.item.description}\n`);
     },
     equipItem(itemChosen) {
-        //to do
         const objChosen = player.items.find(obj => obj.item.name === itemChosen);
         if (Number(objChosen.item.id) < 1500) {
-            switch (player.vocation) {
-                case 'knight':
-                    //to do
+            console.log(objChosen.item.id);
+            switch (player.vocation.name) {
+                case 'Knight':
+                    if (objChosen.item.id[1] === '1' || objChosen.item.id[1] === '2') {
+                        if (player.equipment.weapon) {
+                            this.addItem(player.equipment.weapon, 1);
+                            player.unequipWeapon();
+                        }
+                        player.equipWeapon(objChosen.item);
+                        this.discardItem(objChosen.item.name, 1);
+                        console.log(`\n${objChosen.item.name} was equipped.`);
+                    } else {
+                        console.log('\nKnights can only equip a Sword or an Axe as weapons.');
+                    }
                     break;
-                case 'mage':
-                    //to do
+                case 'Mage':
+                    if (objChosen.item.id[1] === '3') {
+                        if (player.equipment.weapon) {
+                            this.addItem(player.equipment.weapon, 1);
+                            player.unequipWeapon();
+                        }
+                        player.equipWeapon(objChosen.item);
+                        this.discardItem(objChosen.item.name, 1);
+                        console.log(`\n${objChosen.item.name} was equipped.`);
+                    } else {
+                        console.log('\nMages can only equip a Rod as weapons.');
+                    }
                     break;
-                case 'archer':
-                    //to do
+                case 'Archer':
+                    if (objChosen.item.id[1] === '4') {
+                        if (player.equipment.weapon) {
+                            this.addItem(player.equipment.weapon, 1);
+                            player.unequipWeapon();
+                        }
+                        player.equipWeapon(objChosen.item);
+                        this.discardItem(objChosen.item.name, 1);
+                        console.log(`\n${objChosen.item.name} was equipped.`);
+                    } else {
+                        console.log('\nArchers can only equip a Bow as weapons.');
+                    }
                     break;
+                default:
+                    console.log('\nVocation Invalid.');
             }
         } else if (Number(objChosen.item.id > 1500 && Number(objChosen.item.id < 1600))) {
             if (player.equipment.armor) {
@@ -90,7 +140,7 @@ const action = {
             }
             player.equipArmor(objChosen.item);
             this.discardItem(objChosen.item.name, 1);
-            console.log(`\n${objChosen.item.name} was equipped.\n`);
+            console.log(`\n${objChosen.item.name} was equipped.`);
         } else if (Number(objChosen.item.id > 1600 && Number(objChosen.item.id < 1700))) {
             if (player.equipment.shield) {
                 this.addItem(player.equipment.shield, 1);
@@ -98,10 +148,11 @@ const action = {
             }
             player.equipShield(objChosen.item);
             this.discardItem(objChosen.item.name, 1);
-            console.log(`\n${objChosen.item.name} was equipped.\n`);
+            console.log(`\n${objChosen.item.name} was equipped.`);
         }
         if (player.equipment.weapon.twoHanded && player.equipment.shield) {
-            console.log(`\n${player.equipment.shield} was unequipped due to the weapon being a Two-handed type.\n`);
+            console.log(`\n${player.equipment.shield.name} was unequipped due to the weapon being a Two-handed type.`);
+            this.addItem(player.equipment.shield, 1);
             player.unequipShield();
         }
     },
