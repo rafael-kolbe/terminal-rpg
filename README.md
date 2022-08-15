@@ -12,7 +12,7 @@
 -   Others.
 
 1.  [ ] Lock classes to a specific weapon type.
-2.  [ ] Add actions to manipulate the inventory.
+2.  [x] Add actions to manipulate the inventory.
 3.  [ ] Add a shop.
 4.  [ ] Add spells to each class.
 5.  [x] Add special attacks to enemies.
