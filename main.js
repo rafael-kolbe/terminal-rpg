@@ -52,216 +52,191 @@ action.addItem(database.shields.dragonShield, 2);
 action.addItem(database.weapons.axes.lumberjackAxe, 1);
 action.addItem(database.weapons.rods.tempestRod, 1);
 
-while (gameState) {
-    while (player.location === 'city' && player.mode === 'idle' && gameState) {
-        console.log(`You are currently at [${player.location}]`);
-        let playerAction = prompt('Choose an action => [view][travel][restore][exit]: ');
-        if (playerAction === 'view') {
-            playerAction = prompt('Choose to view => [status][equipment][inventory]: ');
-            if (playerAction === 'status') {
-                action.status();
-            } else if (playerAction === 'equipment') {
-                action.equipment();
-            } else if (playerAction === 'inventory') {
-                console.log('');
-                let atInventory = true;
-                while (atInventory) {
-                    action.inventory();
-                    playerAction = prompt('Choose an action + item name => [look][equip][use][discard] or [back]: ');
-                    if (playerAction === 'back') {
-                        atInventory = false;
-                        console.log('');
-                    } else {
-                        let actionChosen = playerAction.split(' ')[0];
-                        let itemChosen = '';
-                        for (let i = 0; i < playerAction.length; i++) {
-                            if (playerAction[i] === ' ') {
-                                itemChosen = playerAction.slice(i + 1);
-                                break;
-                            }
-                        }
-                        if (actionChosen === 'look' && player.items.some(obj => obj.item.name === itemChosen)) {
-                            action.lookItem(itemChosen);
-                        } else if (actionChosen === 'equip' && player.items.some(obj => obj.item.name === itemChosen)) {
-                            let objChosen = player.items.find(obj => obj.item.name === itemChosen);
-                            if (objChosen.item.id[0] === '1') {
-                                action.equipItem(itemChosen);
-                                action.equipment();
-                            } else {
-                                console.log('\nAction invalid.\n');
-                            }
-                        } else if (actionChosen === 'use' && player.items.some(obj => obj.item.name === itemChosen)) {
-                            let objChosen = player.items.find(obj => obj.item.name === itemChosen);
-                            if (objChosen.item.id[0] === '2') {
-                                action.useItem(itemChosen);
-                                console.log(
-                                    `[Hp: ${player.hp[0]} / ${player.hp[1]}, Mana: ${player.mana[0]} / ${player.mana[1]}]`,
-                                );
-                                console.log(`[Status: ${action.showStatus(player.status)}]\n`);
-                            } else {
-                                console.log('\nAction invalid.\n');
-                            }
-                        } else if (actionChosen === 'discard' && player.items.some(obj => obj.item.name === itemChosen)) {
-                            playerAction = prompt('Choose a number to discard or [all]: ');
-                            if (playerAction !== 'all') {
-                                playerAction = Number(playerAction);
-                            }
-                            action.discardItem(itemChosen, playerAction);
-                            console.log(`\nYou discarded ${playerAction} ${itemChosen}(s).\n`);
+gameplay();
+async function gameplay() {
+    while (gameState) {
+        while (player.location === 'city' && player.mode === 'idle' && gameState) {
+            console.log(`You are currently at [${player.location}]`);
+            let playerAction = prompt('Choose an action => [view][travel][restore][exit]: ');
+            if (playerAction === 'view') {
+                playerAction = prompt('Choose to view => [status][equipment][inventory]: ');
+                if (playerAction === 'status') {
+                    action.status();
+                } else if (playerAction === 'equipment') {
+                    action.equipment();
+                } else if (playerAction === 'inventory') {
+                    console.log('');
+                    let atInventory = true;
+                    while (atInventory) {
+                        action.inventory();
+                        playerAction = prompt('Choose an action + item name => [look][equip][use][discard] or [back]: ');
+                        if (playerAction === 'back') {
+                            atInventory = false;
+                            console.log('');
                         } else {
-                            console.log('\nAction invalid.\n');
-                        }
-                    }
-                }
-            } else {
-                console.log('\nAction invalid.\n');
-            }
-        } else if (playerAction === 'travel') {
-            action.travel(prompt(`Choose a location to travel to => ${possibleDirections()}: `));
-        } else if (playerAction === 'restore') {
-            action.restore();
-        } else if (playerAction === 'exit') {
-            exit();
-        } else {
-            console.log('\nAction invalid.\n');
-        }
-    }
-
-    while ((player.location === 'cave' || player.location === 'outskirts') && player.mode === 'idle') {
-        console.log(`You are currently at [${player.location}]`);
-        let playerAction = prompt('Choose an action => [view][travel][hunt]: ');
-        if (playerAction === 'view') {
-            playerAction = prompt('Choose to view => [status][equipment][inventory]: ');
-            if (playerAction === 'status') {
-                action.status();
-            } else if (playerAction === 'equipment') {
-                action.equipment();
-            } else if (playerAction === 'inventory') {
-                console.log('');
-                let atInventory = true;
-                while (atInventory) {
-                    action.inventory();
-                    playerAction = prompt('Choose an action + item name => [look][equip][use][discard] or [back]: ');
-                    if (playerAction === 'back') {
-                        atInventory = false;
-                        console.log('');
-                    } else {
-                        let actionChosen = playerAction.split(' ')[0];
-                        let itemChosen = '';
-                        for (let i = 0; i < playerAction.length; i++) {
-                            if (playerAction[i] === ' ') {
-                                itemChosen = playerAction.slice(i + 1);
-                                break;
+                            let actionChosen = playerAction.split(' ')[0];
+                            let itemChosen = '';
+                            for (let i = 0; i < playerAction.length; i++) {
+                                if (playerAction[i] === ' ') {
+                                    itemChosen = playerAction.slice(i + 1);
+                                    break;
+                                }
                             }
-                        }
-                        if (actionChosen === 'look' && player.items.some(obj => obj.item.name === itemChosen)) {
-                            action.lookItem(itemChosen);
-                        } else if (actionChosen === 'equip' && player.items.some(obj => obj.item.name === itemChosen)) {
-                            let objChosen = player.items.find(obj => obj.item.name === itemChosen);
-                            if (objChosen.item.id[0] === '1') {
-                                action.equipItem(itemChosen);
-                                action.equipment();
+                            if (actionChosen === 'look' && player.items.some(obj => obj.item.name === itemChosen)) {
+                                action.lookItem(itemChosen);
+                            } else if (actionChosen === 'equip' && player.items.some(obj => obj.item.name === itemChosen)) {
+                                let objChosen = player.items.find(obj => obj.item.name === itemChosen);
+                                if (objChosen.item.id[0] === '1') {
+                                    action.equipItem(itemChosen);
+                                    action.equipment();
+                                } else {
+                                    console.log('\nAction invalid.\n');
+                                }
+                            } else if (actionChosen === 'use' && player.items.some(obj => obj.item.name === itemChosen)) {
+                                let objChosen = player.items.find(obj => obj.item.name === itemChosen);
+                                if (objChosen.item.id[0] === '2') {
+                                    action.useItem(itemChosen);
+                                    console.log(
+                                        `[Hp: ${player.hp[0]} / ${player.hp[1]}, Mana: ${player.mana[0]} / ${player.mana[1]}]`,
+                                    );
+                                    console.log(`[Status: ${action.showStatus(player.status)}]\n`);
+                                } else {
+                                    console.log('\nAction invalid.\n');
+                                }
+                            } else if (actionChosen === 'discard' && player.items.some(obj => obj.item.name === itemChosen)) {
+                                playerAction = prompt('Choose a number to discard or [all]: ');
+                                if (playerAction !== 'all') {
+                                    playerAction = Number(playerAction);
+                                }
+                                action.discardItem(itemChosen, playerAction);
+                                console.log(`\nYou discarded ${playerAction} ${itemChosen}(s).\n`);
                             } else {
                                 console.log('\nAction invalid.\n');
                             }
-                        } else if (actionChosen === 'use' && player.items.some(obj => obj.item.name === itemChosen)) {
-                            let objChosen = player.items.find(obj => obj.item.name === itemChosen);
-                            if (objChosen.item.id[0] === '2') {
-                                action.useItem(itemChosen);
-                                console.log(
-                                    `[Hp: ${player.hp[0]} / ${player.hp[1]}, Mana: ${player.mana[0]} / ${player.mana[1]}]`,
-                                );
-                                console.log(`[Status: ${action.showStatus(player.status)}]\n`);
-                            } else {
-                                console.log('\nAction invalid.\n');
-                            }
-                        } else if (actionChosen === 'discard' && player.items.some(obj => obj.item.name === itemChosen)) {
-                            playerAction = prompt('Choose a number to discard or [all]: ');
-                            if (playerAction !== 'all') {
-                                playerAction = Number(playerAction);
-                            }
-                            action.discardItem(itemChosen, playerAction);
-                            console.log(`\nYou discarded ${playerAction} ${itemChosen}(s).\n`);
-                        } else {
-                            console.log('\nAction invalid.\n');
                         }
-                    }
-                }
-            } else {
-                console.log('\nAction invalid.\n');
-            }
-        } else if (playerAction === 'travel') {
-            action.travel(prompt(`Choose a location to travel to => ${possibleDirections()}: `));
-        } else if (playerAction === 'hunt') {
-            console.log(`\nHunting at ${player.location}...`);
-            arrMonster = action.hunt(location[player.location].mob.length);
-            player.mode = 'battle';
-        } else {
-            console.log('\nAction invalid.\n');
-        }
-    }
-
-    while (player.mode === 'battle') {
-        while (turn === 'standby' && player.mode === 'battle') {
-            if (arrMonster.length === 0) {
-                finishBattle();
-            } else {
-                console.log(
-                    `\n[${player.name}, Level: ${player.level}, Hp: ${player.hp[0]} / ${player.hp[1]}], Mana: ${player.mana[0]} / ${player.mana[1]}]`,
-                );
-                console.log(`\n          vs\n`);
-
-                for (let i = 0; i < arrMonster.length; i++) {
-                    console.log(
-                        `[${i + 1}. ${arrMonster[i].name}, Level: ${arrMonster[i].level}, Hp: ${arrMonster[i].hp[0]} / ${
-                            arrMonster[i].hp[1]
-                        }]`,
-                    );
-                }
-                console.log(``);
-                turn = 'player';
-            }
-        }
-
-        while (turn === 'player' && player.mode === 'battle') {
-            let playerAction = prompt('Choose an action => [attack][spell][item]: ');
-            if (playerAction === 'attack') {
-                let target = prompt(`Choose a target => ${possibleTargets()}: `);
-                if (arrMonster[target - 1]) {
-                    if (player.vocation.name === 'Mage' && player.mana[0] < player.equipment.weapon.manaCost) {
-                        console.log('\nNot enough mana.\n');
-                        turn = 'monster';
-                    } else {
-                        const damageDealt = player.attack();
-                        arrMonster[target - 1].hp[0] -= damageDealt;
-                        console.log(`\n${player.name} used a basic attack!`);
-                        console.log(`You dealt ${damageDealt} damage to ${arrMonster[target - 1].name}.\n`);
-
-                        if (arrMonster[target - 1].hp[0] <= 0) {
-                            arrMonster[target - 1].hp[0] = 0;
-                            console.log(`You killed a ${arrMonster[target - 1].name}.`);
-                            player.currentExp += arrMonster[target - 1].expGain;
-                            console.log(`You gained ${arrMonster[target - 1].expGain} experience.\n`);
-                            arrMonster.splice(arrMonster.indexOf(arrMonster[target - 1]), 1);
-                            while (player.currentExp >= player.nextLevel) {
-                                action.levelUp();
-                                action.restore();
-                            }
-                        }
-                        turn = 'monster';
                     }
                 } else {
-                    console.log('\nTarget invalid.\n');
+                    console.log('\nAction invalid.\n');
                 }
-            } else if (playerAction === 'spell') {
-                let spellChosen = prompt(`Choose a spell => ${possibleSpells()}: `);
-                if (player.spells[spellChosen - 1]) {
-                    if (player.mana[0] >= spell[player.spells[spellChosen - 1]].manaCost) {
-                        let target = prompt(`Choose a target => ${possibleTargets()}: `);
-                        if (arrMonster[target - 1]) {
-                            const damageDealt = spell[player.spells[spellChosen - 1]].effect();
+            } else if (playerAction === 'travel') {
+                action.travel(prompt(`Choose a location to travel to => ${possibleDirections()}: `));
+            } else if (playerAction === 'restore') {
+                action.restore();
+            } else if (playerAction === 'exit') {
+                exit();
+            } else {
+                console.log('\nAction invalid.\n');
+            }
+        }
+
+        while ((player.location === 'cave' || player.location === 'outskirts') && player.mode === 'idle') {
+            console.log(`You are currently at [${player.location}]`);
+            let playerAction = prompt('Choose an action => [view][travel][hunt]: ');
+            if (playerAction === 'view') {
+                playerAction = prompt('Choose to view => [status][equipment][inventory]: ');
+                if (playerAction === 'status') {
+                    action.status();
+                } else if (playerAction === 'equipment') {
+                    action.equipment();
+                } else if (playerAction === 'inventory') {
+                    console.log('');
+                    let atInventory = true;
+                    while (atInventory) {
+                        action.inventory();
+                        playerAction = prompt('Choose an action + item name => [look][equip][use][discard] or [back]: ');
+                        if (playerAction === 'back') {
+                            atInventory = false;
+                            console.log('');
+                        } else {
+                            let actionChosen = playerAction.split(' ')[0];
+                            let itemChosen = '';
+                            for (let i = 0; i < playerAction.length; i++) {
+                                if (playerAction[i] === ' ') {
+                                    itemChosen = playerAction.slice(i + 1);
+                                    break;
+                                }
+                            }
+                            if (actionChosen === 'look' && player.items.some(obj => obj.item.name === itemChosen)) {
+                                action.lookItem(itemChosen);
+                            } else if (actionChosen === 'equip' && player.items.some(obj => obj.item.name === itemChosen)) {
+                                let objChosen = player.items.find(obj => obj.item.name === itemChosen);
+                                if (objChosen.item.id[0] === '1') {
+                                    action.equipItem(itemChosen);
+                                    action.equipment();
+                                } else {
+                                    console.log('\nAction invalid.\n');
+                                }
+                            } else if (actionChosen === 'use' && player.items.some(obj => obj.item.name === itemChosen)) {
+                                let objChosen = player.items.find(obj => obj.item.name === itemChosen);
+                                if (objChosen.item.id[0] === '2') {
+                                    action.useItem(itemChosen);
+                                    console.log(
+                                        `[Hp: ${player.hp[0]} / ${player.hp[1]}, Mana: ${player.mana[0]} / ${player.mana[1]}]`,
+                                    );
+                                    console.log(`[Status: ${action.showStatus(player.status)}]\n`);
+                                } else {
+                                    console.log('\nAction invalid.\n');
+                                }
+                            } else if (actionChosen === 'discard' && player.items.some(obj => obj.item.name === itemChosen)) {
+                                playerAction = prompt('Choose a number to discard or [all]: ');
+                                if (playerAction !== 'all') {
+                                    playerAction = Number(playerAction);
+                                }
+                                action.discardItem(itemChosen, playerAction);
+                                console.log(`\nYou discarded ${playerAction} ${itemChosen}(s).\n`);
+                            } else {
+                                console.log('\nAction invalid.\n');
+                            }
+                        }
+                    }
+                } else {
+                    console.log('\nAction invalid.\n');
+                }
+            } else if (playerAction === 'travel') {
+                action.travel(prompt(`Choose a location to travel to => ${possibleDirections()}: `));
+            } else if (playerAction === 'hunt') {
+                console.log(`\nHunting at ${player.location}...`);
+                arrMonster = action.hunt(location[player.location].mob.length);
+                player.mode = 'battle';
+            } else {
+                console.log('\nAction invalid.\n');
+            }
+        }
+
+        while (player.mode === 'battle') {
+            while (turn === 'standby' && player.mode === 'battle') {
+                if (arrMonster.length === 0) {
+                    finishBattle();
+                } else {
+                    console.log(
+                        `\n[${player.name}, Level: ${player.level}, Hp: ${player.hp[0]} / ${player.hp[1]}], Mana: ${player.mana[0]} / ${player.mana[1]}]`,
+                    );
+                    await delay(2000);
+                    console.log(`\n          vs\n`);
+                    for (let i = 0; i < arrMonster.length; i++) {
+                        console.log(
+                            `[${i + 1}. ${arrMonster[i].name}, Level: ${arrMonster[i].level}, Hp: ${arrMonster[i].hp[0]} / ${
+                                arrMonster[i].hp[1]
+                            }]`,
+                        );
+                    }
+                    console.log(``);
+                    turn = 'player';
+                }
+            }
+
+            while (turn === 'player' && player.mode === 'battle') {
+                let playerAction = prompt('Choose an action => [attack][spell][item]: ');
+                if (playerAction === 'attack') {
+                    let target = prompt(`Choose a target => ${possibleTargets()}: `);
+                    if (arrMonster[target - 1]) {
+                        if (player.vocation.name === 'Mage' && player.mana[0] < player.equipment.weapon.manaCost) {
+                            console.log('\nNot enough mana.\n');
+                            turn = 'monster';
+                        } else {
+                            const damageDealt = player.attack();
                             arrMonster[target - 1].hp[0] -= damageDealt;
-                            console.log(`\n${player.name} used ${player.spells[spellChosen - 1]}!`);
+                            console.log(`\n${player.name} used a basic attack!`);
                             console.log(`You dealt ${damageDealt} damage to ${arrMonster[target - 1].name}.\n`);
 
                             if (arrMonster[target - 1].hp[0] <= 0) {
@@ -276,44 +251,72 @@ while (gameState) {
                                 }
                             }
                             turn = 'monster';
-                        } else {
-                            console.log('\nTarget invalid.\n');
                         }
                     } else {
-                        console.log('\nNot enough mana.\n');
+                        console.log('\nTarget invalid.\n');
                     }
-                } else {
-                    console.log('\nSpell invalid.\n');
-                }
-            } else if (playerAction === 'item') {
-                // to do
-            } else {
-                console.log('\nAction invalid.\n');
-            }
-        }
+                } else if (playerAction === 'spell') {
+                    let spellChosen = prompt(`Choose a spell => ${possibleSpells()}: `);
+                    if (player.spells[spellChosen - 1]) {
+                        if (player.mana[0] >= spell[player.spells[spellChosen - 1]].manaCost) {
+                            let target = prompt(`Choose a target => ${possibleTargets()}: `);
+                            if (arrMonster[target - 1]) {
+                                const damageDealt = spell[player.spells[spellChosen - 1]].effect();
+                                arrMonster[target - 1].hp[0] -= damageDealt;
+                                console.log(`\n${player.name} used ${player.spells[spellChosen - 1]}!`);
+                                console.log(`You dealt ${damageDealt} damage to ${arrMonster[target - 1].name}.\n`);
 
-        while (turn === 'monster' && player.mode === 'battle') {
-            if (arrMonster.length > 0) {
-                for (let monster of arrMonster) {
-                    if (monster.hp[0] > 0) {
-                        player.hp[0] -= monster.script();
-
-                        if (player.hp[0] <= 0) {
-                            console.log(`\nYou have been killed by ${monster.name}.`);
-                            const expLost = Math.floor(player.currentExp * 0.8);
-                            player.currentExp -= expLost;
-                            console.log(`You lost ${expLost} experience.\n`);
-                            while (player.currentExp < expTable[player.level - 2]) {
-                                action.levelDown();
+                                if (arrMonster[target - 1].hp[0] <= 0) {
+                                    arrMonster[target - 1].hp[0] = 0;
+                                    console.log(`You killed a ${arrMonster[target - 1].name}.`);
+                                    player.currentExp += arrMonster[target - 1].expGain;
+                                    console.log(`You gained ${arrMonster[target - 1].expGain} experience.\n`);
+                                    arrMonster.splice(arrMonster.indexOf(arrMonster[target - 1]), 1);
+                                    while (player.currentExp >= player.nextLevel) {
+                                        action.levelUp();
+                                        action.restore();
+                                    }
+                                }
+                                turn = 'monster';
+                            } else {
+                                console.log('\nTarget invalid.\n');
                             }
-                            finishBattle();
-                            player.location = 'city';
-                            action.restore();
+                        } else {
+                            console.log('\nNot enough mana.\n');
+                        }
+                    } else {
+                        console.log('\nSpell invalid.\n');
+                    }
+                } else if (playerAction === 'item') {
+                    // to do
+                } else {
+                    console.log('\nAction invalid.\n');
+                }
+            }
+
+            while (turn === 'monster' && player.mode === 'battle') {
+                if (arrMonster.length > 0) {
+                    for (let monster of arrMonster) {
+                        if (monster.hp[0] > 0) {
+                            player.hp[0] -= monster.script();
+
+                            if (player.hp[0] <= 0) {
+                                console.log(`\nYou have been killed by ${monster.name}.`);
+                                const expLost = Math.floor(player.currentExp * 0.8);
+                                player.currentExp -= expLost;
+                                console.log(`You lost ${expLost} experience.\n`);
+                                while (player.currentExp < expTable[player.level - 2]) {
+                                    action.levelDown();
+                                }
+                                finishBattle();
+                                player.location = 'city';
+                                action.restore();
+                            }
                         }
                     }
                 }
+                turn = 'standby';
             }
-            turn = 'standby';
         }
     }
 }
@@ -362,4 +365,8 @@ function exit() {
     } else {
         console.log('\nAction invalid.\n');
     }
+}
+
+function delay(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
 }
