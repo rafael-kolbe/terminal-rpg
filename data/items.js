@@ -312,11 +312,6 @@ const database = {
                 use() {
                     const recover = Math.floor(Math.random() * (70 - 40) + 40);
                     return ['life', recover];
-                    // player.hp[0] += recover;
-                    // if (player.hp[0] > player.hp[1]) {
-                    //     player.hp[0] = player.hp[1];
-                    // }
-                    // console.log(`You recovered ${recover} hp.\n`);
                 },
             },
             manaPotion: {
@@ -327,11 +322,6 @@ const database = {
                 use() {
                     const recover = Math.floor(Math.random() * (85 - 50) + 50);
                     return ['mana', recover];
-                    // player.mana[0] += recover;
-                    // if (player.mana[0] > player.mana[1]) {
-                    //     player.mana[0] = player.mana[1];
-                    // }
-                    // console.log(`You recovered ${recover} mana.\n`);
                 },
             },
             antidote: {
@@ -341,11 +331,6 @@ const database = {
                 price: 100,
                 use() {
                     return ['status', 'Poison'];
-                    // if (player.status.some(obj => obj.name === 'Poison')) {
-                    //     const objIndex = player.status.findIndex(obj => obj.name === 'Poison');
-                    //     player.status.splice(objIndex, 1);
-                    //     console.log(`You are no longer poisoned.\n`);
-                    // }
                 },
             },
         },

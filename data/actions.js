@@ -67,18 +67,18 @@ const action = {
                 item: objItem,
                 qty: qty,
             });
-
-            //Inventory full
-            while (player.items.length > player.equipment.backpack.size) {
-                console.log('\nYou have more items than you can carry, please discard items until your backpack is full.');
-                this.inventory();
-                const discardThis = prompt(`Choose an item to discard: `);
-                if (player.items.some(obj => obj.item.name === discardThis)) {
-                    console.log(`\nYou discarded your stack of ${discardThis}.`);
-                    this.discardItem(discardThis, 'all');
-                } else {
-                    console.log(`\nItem Invalid.\n`);
-                }
+        }
+    },
+    isInventoryFull() {
+        while (player.items.length > player.equipment.backpack.size) {
+            console.log('\nYou have more items than you can carry, please discard items until your backpack is full.');
+            this.inventory();
+            const discardThis = prompt(`Choose an item to discard: `);
+            if (player.items.some(obj => obj.item.name === discardThis)) {
+                console.log(`\nYou discarded your stack of ${discardThis}.`);
+                this.discardItem(discardThis, 'all');
+            } else {
+                console.log(`\nItem Invalid.\n`);
             }
         }
     },
@@ -89,7 +89,6 @@ const action = {
     equipItem(itemChosen) {
         const objChosen = player.items.find(obj => obj.item.name === itemChosen);
         if (Number(objChosen.item.id) < 1500) {
-            console.log(objChosen.item.id);
             switch (player.vocation.name) {
                 case 'Knight':
                     if (objChosen.item.id[1] === '1' || objChosen.item.id[1] === '2') {

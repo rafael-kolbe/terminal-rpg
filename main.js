@@ -9,51 +9,71 @@ const { database } = require('./data/items');
 //input enable
 const prompt = require('prompt-sync')({ sigint: true });
 
+//fs enable
+const fs = require('fs');
+
 //code here
 let gameState = true;
+let login = false;
 let vocationSet = false;
 let arrMonster = [];
 let turn = 'standby';
 
-const nameChosen = prompt('Choose a name: ');
-player.name = nameChosen.charAt(0).toUpperCase() + nameChosen.slice(1);
-console.log(`\nHello adventure ${player.name}!\n`);
-
-while (!vocationSet) {
-    const vocationChosen = prompt(`Please, choose a vocation => [knight][mage][archer]: `);
-    if (vocationChosen === 'knight') {
-        player.vocation = vocation.knight;
-        vocation.knight.startingEquipment();
-        console.log('\nYou became a Knight!\n');
-        player.spells.push('Brutal Strike');
-        vocationSet = true;
-    } else if (vocationChosen === 'mage') {
-        player.vocation = vocation.mage;
-        vocation.mage.startingEquipment();
-        console.log('\nYou became a Mage!\n');
-        player.spells.push('Energy Strike');
-        vocationSet = true;
-    } else if (vocationChosen === 'archer') {
-        player.vocation = vocation.archer;
-        vocation.archer.startingEquipment();
-        console.log('\nYou became an Archer!\n');
-        player.spells.push('Double Shot');
-        vocationSet = true;
-    } else {
-        console.log('Vocation invalid.\n');
-    }
-}
-
-action.addItem(database.usable.potions.lifePotion, 1);
-action.addItem(database.usable.potions.lifePotion, 3);
-action.addItem(database.usable.potions.manaPotion, 2);
-action.addItem(database.armors.brassArmor, 1);
-action.addItem(database.shields.dragonShield, 2);
-action.addItem(database.weapons.axes.lumberjackAxe, 1);
-action.addItem(database.weapons.rods.tempestRod, 1);
-
 gameplay();
 async function gameplay() {
+    while (!login) {
+        const playerChoice = prompt('Do you want to load a saved file? => [yes][no]: ');
+        if (playerChoice === 'yes') {
+            //load files
+            //checkDir(possibleFiles);
+        } else if (playerChoice === 'no') {
+            const nameChosen = prompt('Choose a name: ');
+            player.name = nameChosen.charAt(0).toUpperCase() + nameChosen.slice(1);
+            console.log(`\nHello adventure ${player.name}!\n`);
+            await delay();
+
+            while (!vocationSet) {
+                const vocationChosen = prompt(`Please, choose a vocation => [knight][mage][archer]: `);
+                if (vocationChosen === 'knight') {
+                    player.vocation = vocation.knight;
+                    vocation.knight.startingEquipment();
+                    console.log('\nYou became a Knight!\n');
+                    player.spells.push('Brutal Strike');
+                    await delay();
+                    vocationSet = true;
+                } else if (vocationChosen === 'mage') {
+                    player.vocation = vocation.mage;
+                    vocation.mage.startingEquipment();
+                    console.log('\nYou became a Mage!\n');
+                    player.spells.push('Energy Strike');
+                    await delay();
+                    vocationSet = true;
+                } else if (vocationChosen === 'archer') {
+                    player.vocation = vocation.archer;
+                    vocation.archer.startingEquipment();
+                    console.log('\nYou became an Archer!\n');
+                    player.spells.push('Double Shot');
+                    await delay();
+                    vocationSet = true;
+                } else {
+                    console.log('Vocation invalid.\n');
+                }
+            }
+
+            action.addItem(database.usable.potions.lifePotion, 1);
+            action.addItem(database.usable.potions.lifePotion, 3);
+            action.addItem(database.usable.potions.manaPotion, 2);
+            action.addItem(database.armors.brassArmor, 1);
+            action.addItem(database.shields.dragonShield, 2);
+            action.addItem(database.weapons.axes.lumberjackAxe, 1);
+            action.addItem(database.weapons.rods.tempestRod, 1);
+
+            login = true;
+        } else {
+            console.log('\nAction invalid.\n');
+        }
+    }
+
     while (gameState) {
         while (player.location === 'city' && player.mode === 'idle' && gameState) {
             console.log(`You are currently at [${player.location}]`);
@@ -62,8 +82,10 @@ async function gameplay() {
                 playerAction = prompt('Choose to view => [status][equipment][inventory]: ');
                 if (playerAction === 'status') {
                     action.status();
+                    await delay();
                 } else if (playerAction === 'equipment') {
                     action.equipment();
+                    await delay();
                 } else if (playerAction === 'inventory') {
                     console.log('');
                     let atInventory = true;
@@ -71,6 +93,7 @@ async function gameplay() {
                         action.inventory();
                         playerAction = prompt('Choose an action + item name => [look][equip][use][discard] or [back]: ');
                         if (playerAction === 'back') {
+                            action.isInventoryFull();
                             atInventory = false;
                             console.log('');
                         } else {
@@ -84,11 +107,14 @@ async function gameplay() {
                             }
                             if (actionChosen === 'look' && player.items.some(obj => obj.item.name === itemChosen)) {
                                 action.lookItem(itemChosen);
+                                await delay();
                             } else if (actionChosen === 'equip' && player.items.some(obj => obj.item.name === itemChosen)) {
                                 let objChosen = player.items.find(obj => obj.item.name === itemChosen);
                                 if (objChosen.item.id[0] === '1') {
                                     action.equipItem(itemChosen);
+                                    await delay();
                                     action.equipment();
+                                    await delay();
                                 } else {
                                     console.log('\nAction invalid.\n');
                                 }
@@ -96,10 +122,12 @@ async function gameplay() {
                                 let objChosen = player.items.find(obj => obj.item.name === itemChosen);
                                 if (objChosen.item.id[0] === '2') {
                                     action.useItem(itemChosen);
+                                    await delay();
                                     console.log(
                                         `[Hp: ${player.hp[0]} / ${player.hp[1]}, Mana: ${player.mana[0]} / ${player.mana[1]}]`,
                                     );
                                     console.log(`[Status: ${action.showStatus(player.status)}]\n`);
+                                    await delay();
                                 } else {
                                     console.log('\nAction invalid.\n');
                                 }
@@ -110,6 +138,7 @@ async function gameplay() {
                                 }
                                 action.discardItem(itemChosen, playerAction);
                                 console.log(`\nYou discarded ${playerAction} ${itemChosen}(s).\n`);
+                                await delay();
                             } else {
                                 console.log('\nAction invalid.\n');
                             }
@@ -122,6 +151,7 @@ async function gameplay() {
                 action.travel(prompt(`Choose a location to travel to => ${possibleDirections()}: `));
             } else if (playerAction === 'restore') {
                 action.restore();
+                await delay();
             } else if (playerAction === 'exit') {
                 exit();
             } else {
@@ -136,8 +166,10 @@ async function gameplay() {
                 playerAction = prompt('Choose to view => [status][equipment][inventory]: ');
                 if (playerAction === 'status') {
                     action.status();
+                    await delay();
                 } else if (playerAction === 'equipment') {
                     action.equipment();
+                    await delay();
                 } else if (playerAction === 'inventory') {
                     console.log('');
                     let atInventory = true;
@@ -145,6 +177,7 @@ async function gameplay() {
                         action.inventory();
                         playerAction = prompt('Choose an action + item name => [look][equip][use][discard] or [back]: ');
                         if (playerAction === 'back') {
+                            action.isInventoryFull();
                             atInventory = false;
                             console.log('');
                         } else {
@@ -158,11 +191,14 @@ async function gameplay() {
                             }
                             if (actionChosen === 'look' && player.items.some(obj => obj.item.name === itemChosen)) {
                                 action.lookItem(itemChosen);
+                                await delay();
                             } else if (actionChosen === 'equip' && player.items.some(obj => obj.item.name === itemChosen)) {
                                 let objChosen = player.items.find(obj => obj.item.name === itemChosen);
                                 if (objChosen.item.id[0] === '1') {
                                     action.equipItem(itemChosen);
+                                    await delay();
                                     action.equipment();
+                                    await delay();
                                 } else {
                                     console.log('\nAction invalid.\n');
                                 }
@@ -170,10 +206,12 @@ async function gameplay() {
                                 let objChosen = player.items.find(obj => obj.item.name === itemChosen);
                                 if (objChosen.item.id[0] === '2') {
                                     action.useItem(itemChosen);
+                                    await delay();
                                     console.log(
                                         `[Hp: ${player.hp[0]} / ${player.hp[1]}, Mana: ${player.mana[0]} / ${player.mana[1]}]`,
                                     );
                                     console.log(`[Status: ${action.showStatus(player.status)}]\n`);
+                                    await delay();
                                 } else {
                                     console.log('\nAction invalid.\n');
                                 }
@@ -184,6 +222,7 @@ async function gameplay() {
                                 }
                                 action.discardItem(itemChosen, playerAction);
                                 console.log(`\nYou discarded ${playerAction} ${itemChosen}(s).\n`);
+                                await delay();
                             } else {
                                 console.log('\nAction invalid.\n');
                             }
@@ -197,6 +236,7 @@ async function gameplay() {
             } else if (playerAction === 'hunt') {
                 console.log(`\nHunting at ${player.location}...`);
                 arrMonster = action.hunt(location[player.location].mob.length);
+                await delay();
                 player.mode = 'battle';
             } else {
                 console.log('\nAction invalid.\n');
@@ -209,18 +249,24 @@ async function gameplay() {
                     finishBattle();
                 } else {
                     console.log(
-                        `\n[${player.name}, Level: ${player.level}, Hp: ${player.hp[0]} / ${player.hp[1]}], Mana: ${player.mana[0]} / ${player.mana[1]}]`,
+                        `\n[${player.name}, Level: ${player.level}, Hp: ${player.hp[0]} / ${player.hp[1]}, Mana: ${player.mana[0]} / ${player.mana[1]}]`,
                     );
-                    await delay(2000);
-                    console.log(`\n          vs\n`);
+                    if (player.status) {
+                        console.log(action.showStatus(player.status));
+                    }
+                    console.log(`\n            vs\n`);
                     for (let i = 0; i < arrMonster.length; i++) {
                         console.log(
                             `[${i + 1}. ${arrMonster[i].name}, Level: ${arrMonster[i].level}, Hp: ${arrMonster[i].hp[0]} / ${
                                 arrMonster[i].hp[1]
                             }]`,
                         );
+                        if (arrMonster[i].status) {
+                            console.log(action.showStatus(arrMonster[i].status));
+                        }
                     }
-                    console.log(``);
+                    await delay();
+                    console.log('');
                     turn = 'player';
                 }
             }
@@ -238,16 +284,18 @@ async function gameplay() {
                             arrMonster[target - 1].hp[0] -= damageDealt;
                             console.log(`\n${player.name} used a basic attack!`);
                             console.log(`You dealt ${damageDealt} damage to ${arrMonster[target - 1].name}.\n`);
-
+                            await delay();
                             if (arrMonster[target - 1].hp[0] <= 0) {
                                 arrMonster[target - 1].hp[0] = 0;
                                 console.log(`You killed a ${arrMonster[target - 1].name}.`);
                                 player.currentExp += arrMonster[target - 1].expGain;
                                 console.log(`You gained ${arrMonster[target - 1].expGain} experience.\n`);
+                                await delay();
                                 arrMonster.splice(arrMonster.indexOf(arrMonster[target - 1]), 1);
                                 while (player.currentExp >= player.nextLevel) {
                                     action.levelUp();
                                     action.restore();
+                                    await delay();
                                 }
                             }
                             turn = 'monster';
@@ -265,16 +313,18 @@ async function gameplay() {
                                 arrMonster[target - 1].hp[0] -= damageDealt;
                                 console.log(`\n${player.name} used ${player.spells[spellChosen - 1]}!`);
                                 console.log(`You dealt ${damageDealt} damage to ${arrMonster[target - 1].name}.\n`);
-
+                                await delay();
                                 if (arrMonster[target - 1].hp[0] <= 0) {
                                     arrMonster[target - 1].hp[0] = 0;
                                     console.log(`You killed a ${arrMonster[target - 1].name}.`);
                                     player.currentExp += arrMonster[target - 1].expGain;
                                     console.log(`You gained ${arrMonster[target - 1].expGain} experience.\n`);
+                                    await delay();
                                     arrMonster.splice(arrMonster.indexOf(arrMonster[target - 1]), 1);
                                     while (player.currentExp >= player.nextLevel) {
                                         action.levelUp();
                                         action.restore();
+                                        await delay();
                                     }
                                 }
                                 turn = 'monster';
@@ -299,14 +349,17 @@ async function gameplay() {
                     for (let monster of arrMonster) {
                         if (monster.hp[0] > 0) {
                             player.hp[0] -= monster.script();
-
+                            await delay();
                             if (player.hp[0] <= 0) {
                                 console.log(`\nYou have been killed by ${monster.name}.`);
+                                await delay();
                                 const expLost = Math.floor(player.currentExp * 0.8);
                                 player.currentExp -= expLost;
                                 console.log(`You lost ${expLost} experience.\n`);
+                                await delay();
                                 while (player.currentExp < expTable[player.level - 2]) {
                                     action.levelDown();
+                                    await delay();
                                 }
                                 finishBattle();
                                 player.location = 'city';
@@ -319,6 +372,17 @@ async function gameplay() {
             }
         }
     }
+}
+
+function possibleFiles() {
+    let savedFiles = '';
+    fs.readdir('./data/save', (err, files) => {
+        if (err) throw err;
+        for (let file of files) {
+            savedFiles += '[' + file.split('.')[0] + ']';
+        }
+    });
+    return savedFiles;
 }
 
 function possibleDirections() {
@@ -358,6 +422,9 @@ function finishBattle() {
 function exit() {
     let exitResponse = prompt('Are you sure you want to leave the game? => [yes][no]: ');
     if (exitResponse === 'yes') {
+        // const fileName = prompt('Choose a name for your save file: ');
+        // const objectJson = JSON.stringify(player, null, '\t');
+        // save(fileName, objectJson);
         console.log('\nThanks for playing!');
         gameState = false;
     } else if (exitResponse === 'no') {
@@ -367,6 +434,35 @@ function exit() {
     }
 }
 
-function delay(ms) {
+function delay(ms = 2000) {
     return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+function save(fileName, objectJson) {
+    fs.writeFile(`./data/save/${fileName}.json`, objectJson, err => {
+        if (err) throw err;
+        console.log('\nYour progress was saved!\n');
+    });
+}
+
+function load(fileChosen) {
+    fs.readFile(`./data/save/${fileChosen}.json`, 'utf8', (err, data) => {
+        if (err) {
+            console.log('\nFileName invalid.\n');
+        }
+        player = JSON.parse(data);
+        login = true;
+    });
+}
+
+function checkDir(callback) {
+    fs.readdir('./data/save', (err, files) => {
+        if (err) throw err;
+        if (!files.length) {
+            console.log('\nYou have no saved files yet.\n');
+        } else {
+            const fileChosen = prompt(`Choose a file to load => ${callback()}: `);
+            load(fileChosen);
+        }
+    });
 }

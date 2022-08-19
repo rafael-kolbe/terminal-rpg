@@ -10,6 +10,7 @@ const monster = {
             this.expGain = 10;
             this.hp = [20, 20];
             this.atk = 10;
+            this.status = [];
             this.gold = Math.floor(Math.random() * (5 - 2) + 2);
             this.drop = [
                 {
@@ -35,6 +36,7 @@ const monster = {
             this.expGain = 15;
             this.hp = [30, 30];
             this.atk = 15;
+            this.status = [];
             this.gold = Math.floor(Math.random() * (8 - 3) + 3);
             this.drop = [
                 {
@@ -53,9 +55,10 @@ const monster = {
         constructor() {
             this.name = 'Mutated Rat';
             this.level = 5;
-            this.expGain = 1000;
+            this.expGain = 100;
             this.hp = [200, 200];
             this.atk = 25;
+            this.status = [];
             this.gold = Math.floor(Math.random() * (25 - 15) + 15);
             this.drop = [
                 {
