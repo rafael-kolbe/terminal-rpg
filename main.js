@@ -339,6 +339,20 @@ async function gameplay() {
                     }
                 } else if (playerAction === 'item') {
                     // to do
+                    let inventory = [];
+                    for (let obj of player.items) {
+                        if (obj.item.id[0] === '2') {
+                            inventory.push(`[${obj.item.name}]`);
+                        }
+                    }
+                    const itemChosen = prompt(`Choose an item to use => ${inventory.join('')}: `);
+                    if (player.items.some(obj => obj.item.name === itemChosen)) {
+                        action.useItem(itemChosen);
+                        await delay();
+                        turn = 'monster';
+                    } else {
+                        console.log('\nItem invalid.\n');
+                    }
                 } else {
                     console.log('\nAction invalid.\n');
                 }

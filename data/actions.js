@@ -46,7 +46,6 @@ const action = {
     inventory() {
         console.log(`[Inventory: ${player.items.length} / ${player.equipment.backpack.size}]`);
         console.log(this.showInventory(player.items), `\n`);
-        //Add commands to check, equip, use or discard items.
     },
     showInventory(arrItems) {
         let inventory = [];
@@ -157,7 +156,7 @@ const action = {
     },
     useItem(itemChosen) {
         const objChosen = player.items.find(obj => obj.item.name === itemChosen);
-        console.log(`\nYou used a ${itemChosen}.`);
+        console.log(`\nYou used one ${itemChosen} out of ${objChosen.qty}.`);
         const itemEffect = objChosen.item.use();
         if (itemEffect[0] === 'life') {
             player.hp[0] += itemEffect[1];
