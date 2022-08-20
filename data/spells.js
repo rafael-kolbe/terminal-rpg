@@ -5,6 +5,8 @@ const spell = {
     'Brutal Strike': {
         vocation: 'Knight',
         manaCost: 15,
+        targets: [1, 'random'],
+        description: 'Deals physical damage to a random target.',
         effect() {
             player.mana[0] -= this.manaCost;
             return Math.floor(Math.random() * (player.atk * 1.6 - player.atk * 1.2) + player.atk * 1.2) + 15;
@@ -13,16 +15,19 @@ const spell = {
     'Energy Strike': {
         vocation: 'Mage',
         manaCost: 20,
+        targets: [1, 'manual'],
+        description: 'Deals magical damage to a single target.',
         effect() {
             player.mana[0] -= this.manaCost;
-            return (
-                Math.floor(Math.random() * (player.magicAtk * 2 - player.magicAtk * 1.5) + player.magicAtk * 1.5) + 20
-            );
+            return Math.floor(Math.random() * (player.magicAtk * 2 - player.magicAtk * 1.5) + player.magicAtk * 1.5) + 20;
         },
     },
     'Double Shot': {
         vocation: 'Archer',
         manaCost: 20,
+        arrowCost: 2,
+        targets: [1, 'manual'],
+        description: 'Deals physical damage twice to a single target.',
         effect() {
             player.mana[0] -= this.manaCost;
             return player.attack() + player.attack() + 10;

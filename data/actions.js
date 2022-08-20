@@ -23,17 +23,11 @@ const action = {
         return status;
     },
     equipment() {
-        player.equipment.weapon
-            ? console.log(`\n[Weapon: ${player.equipment.weapon.name}, ${player.equipment.weapon.description}]`)
-            : console.log('[Weapon: Not Equipped]');
+        player.equipment.weapon ? console.log(`\n[Weapon: ${player.equipment.weapon.name}, ${player.equipment.weapon.description}]`) : console.log('[Weapon: Not Equipped]');
 
-        player.equipment.shield
-            ? console.log(`[Shield: ${player.equipment.shield.name}, ${player.equipment.shield.description}]`)
-            : console.log('[Shield: Not Equipped]');
+        player.equipment.shield ? console.log(`[Shield: ${player.equipment.shield.name}, ${player.equipment.shield.description}]`) : console.log('[Shield: Not Equipped]');
 
-        player.equipment.armor
-            ? console.log(`[Armor: ${player.equipment.armor.name}, ${player.equipment.armor.description}]`)
-            : console.log('[Armor: Not Equipped]');
+        player.equipment.armor ? console.log(`[Armor: ${player.equipment.armor.name}, ${player.equipment.armor.description}]`) : console.log('[Armor: Not Equipped]');
 
         player.equipment.necklace
             ? console.log(`[Necklace: ${player.equipment.necklace.name}, Charges: ${player.equipment.necklace.charges}]`)
@@ -202,11 +196,12 @@ const action = {
             console.log('\nAction Invalid.\n');
         }
     },
-    travel(newLocation) {
+    async travel(newLocation) {
         let validation = location[player.location].direction.includes(newLocation);
         if (validation) {
             player.location = newLocation;
             console.log(`\nTraveling to ${player.location}...\n`);
+            await delay(5000);
         } else {
             console.log('\nLocation invalid.\n');
         }
@@ -247,6 +242,10 @@ const action = {
         console.log(`You returned from level ${player.level + 1} to level ${player.level}.`);
     },
 };
+
+function delay(ms = 2000) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
 
 module.exports = {
     action,

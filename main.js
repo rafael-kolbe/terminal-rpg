@@ -13,9 +13,9 @@ const prompt = require('prompt-sync')({ sigint: true });
 const fs = require('fs');
 
 //code here
-let gameState = true;
 let login = false;
 let vocationSet = false;
+let gameState = true;
 let arrMonster = [];
 let turn = 'standby';
 
@@ -30,7 +30,7 @@ async function gameplay() {
             const nameChosen = prompt('Choose a name: ');
             player.name = nameChosen.charAt(0).toUpperCase() + nameChosen.slice(1);
             console.log(`\nHello adventure ${player.name}!\n`);
-            await delay();
+            await delay(1000);
 
             while (!vocationSet) {
                 const vocationChosen = prompt(`Please, choose a vocation => [knight][mage][archer]: `);
@@ -39,21 +39,21 @@ async function gameplay() {
                     vocation.knight.startingEquipment();
                     console.log('\nYou became a Knight!\n');
                     player.spells.push('Brutal Strike');
-                    await delay();
+                    await delay(1000);
                     vocationSet = true;
                 } else if (vocationChosen === 'mage') {
                     player.vocation = vocation.mage;
                     vocation.mage.startingEquipment();
                     console.log('\nYou became a Mage!\n');
                     player.spells.push('Energy Strike');
-                    await delay();
+                    await delay(1000);
                     vocationSet = true;
                 } else if (vocationChosen === 'archer') {
                     player.vocation = vocation.archer;
                     vocation.archer.startingEquipment();
                     console.log('\nYou became an Archer!\n');
                     player.spells.push('Double Shot');
-                    await delay();
+                    await delay(1000);
                     vocationSet = true;
                 } else {
                     console.log('Vocation invalid.\n');
@@ -123,9 +123,7 @@ async function gameplay() {
                                 if (objChosen.item.id[0] === '2') {
                                     action.useItem(itemChosen);
                                     await delay();
-                                    console.log(
-                                        `[Hp: ${player.hp[0]} / ${player.hp[1]}, Mana: ${player.mana[0]} / ${player.mana[1]}]`,
-                                    );
+                                    console.log(`[Hp: ${player.hp[0]} / ${player.hp[1]}, Mana: ${player.mana[0]} / ${player.mana[1]}]`);
                                     console.log(`[Status: ${action.showStatus(player.status)}]\n`);
                                     await delay();
                                 } else {
@@ -148,7 +146,7 @@ async function gameplay() {
                     console.log('\nAction invalid.\n');
                 }
             } else if (playerAction === 'travel') {
-                action.travel(prompt(`Choose a location to travel to => ${possibleDirections()}: `));
+                await action.travel(prompt(`Choose a location to travel to => ${possibleDirections()}: `));
             } else if (playerAction === 'restore') {
                 action.restore();
                 await delay();
@@ -207,9 +205,7 @@ async function gameplay() {
                                 if (objChosen.item.id[0] === '2') {
                                     action.useItem(itemChosen);
                                     await delay();
-                                    console.log(
-                                        `[Hp: ${player.hp[0]} / ${player.hp[1]}, Mana: ${player.mana[0]} / ${player.mana[1]}]`,
-                                    );
+                                    console.log(`[Hp: ${player.hp[0]} / ${player.hp[1]}, Mana: ${player.mana[0]} / ${player.mana[1]}]`);
                                     console.log(`[Status: ${action.showStatus(player.status)}]\n`);
                                     await delay();
                                 } else {
@@ -248,19 +244,13 @@ async function gameplay() {
                 if (arrMonster.length === 0) {
                     finishBattle();
                 } else {
-                    console.log(
-                        `\n[${player.name}, Level: ${player.level}, Hp: ${player.hp[0]} / ${player.hp[1]}, Mana: ${player.mana[0]} / ${player.mana[1]}]`,
-                    );
+                    console.log(`\n[${player.name}, Level: ${player.level}, Hp: ${player.hp[0]} / ${player.hp[1]}, Mana: ${player.mana[0]} / ${player.mana[1]}]`);
                     if (player.status.length > 0) {
                         console.log(action.showStatus(player.status));
                     }
                     console.log(`\n            vs\n`);
                     for (let i = 0; i < arrMonster.length; i++) {
-                        console.log(
-                            `[${i + 1}. ${arrMonster[i].name}, Level: ${arrMonster[i].level}, Hp: ${arrMonster[i].hp[0]} / ${
-                                arrMonster[i].hp[1]
-                            }]`,
-                        );
+                        console.log(`[${i + 1}. ${arrMonster[i].name}, Level: ${arrMonster[i].level}, Hp: ${arrMonster[i].hp[0]} / ${arrMonster[i].hp[1]}]`);
                         if (arrMonster[i].status.length > 0) {
                             console.log(action.showStatus(arrMonster[i].status));
                         }
@@ -306,39 +296,32 @@ async function gameplay() {
                 } else if (playerAction === 'spell') {
                     let spellChosen = prompt(`Choose a spell => ${possibleSpells()}: `);
                     if (player.spells[spellChosen - 1]) {
-                        if (player.mana[0] >= spell[player.spells[spellChosen - 1]].manaCost) {
-                            let target = prompt(`Choose a target => ${possibleTargets()}: `);
-                            if (arrMonster[target - 1]) {
-                                const damageDealt = spell[player.spells[spellChosen - 1]].effect();
-                                arrMonster[target - 1].hp[0] -= damageDealt;
-                                console.log(`\n${player.name} used ${player.spells[spellChosen - 1]}!`);
-                                console.log(`You dealt ${damageDealt} damage to ${arrMonster[target - 1].name}.\n`);
-                                await delay();
-                                if (arrMonster[target - 1].hp[0] <= 0) {
-                                    arrMonster[target - 1].hp[0] = 0;
-                                    console.log(`You killed a ${arrMonster[target - 1].name}.`);
-                                    player.currentExp += arrMonster[target - 1].expGain;
-                                    console.log(`You gained ${arrMonster[target - 1].expGain} experience.\n`);
-                                    await delay();
-                                    arrMonster.splice(arrMonster.indexOf(arrMonster[target - 1]), 1);
-                                    while (player.currentExp >= player.nextLevel) {
-                                        action.levelUp();
-                                        action.restore();
-                                        await delay();
-                                    }
-                                }
-                                turn = 'monster';
-                            } else {
-                                console.log('\nTarget invalid.\n');
-                            }
+                        if (spell[player.spells[spellChosen - 1]].targets[0] === 1 && spell[player.spells[spellChosen - 1]].targets[1] === 'manual') {
+                            await singleTargetManual(spellChosen);
+                        } else if (spell[player.spells[spellChosen - 1]].targets[0] === 1 && spell[player.spells[spellChosen - 1]].targets[1] === 'random') {
+                            await singleTargetRandom(spellChosen);
+                        } else if (spell[player.spells[spellChosen - 1]].targets[0] === 2 && spell[player.spells[spellChosen - 1]].targets[1] === 'manual') {
+                            //to do
+                            await doubleTargetManual(spellChosen);
+                        } else if (spell[player.spells[spellChosen - 1]].targets[0] === 2 && spell[player.spells[spellChosen - 1]].targets[1] === 'random') {
+                            //to do
+                            await doubleTargetRandom(spellChosen);
+                        } else if (spell[player.spells[spellChosen - 1]].targets[0] === 2 && spell[player.spells[spellChosen - 1]].targets[1] === 'chain') {
+                            //to do
+                            await doubleTargetChain(spellChosen);
+                        } else if (spell[player.spells[spellChosen - 1]].targets[0] === 3 && spell[player.spells[spellChosen - 1]].targets[1] === 'aoe') {
+                            //to do
+                            await tripleTargetAoe(spellChosen);
+                        } else if (spell[player.spells[spellChosen - 1]].targets[0] >= 3 && spell[player.spells[spellChosen - 1]].targets[1] === 'chain') {
+                            //to do
+                            await tripleTargetChain(spellChosen);
                         } else {
-                            console.log('\nNot enough mana.\n');
+                            console.log('\nFATAL ERROR\n'); //for testing, remember to remove it later.
                         }
                     } else {
                         console.log('\nSpell invalid.\n');
                     }
                 } else if (playerAction === 'item') {
-                    // to do
                     let inventory = [];
                     for (let obj of player.items) {
                         if (obj.item.id[0] === '2') {
@@ -423,6 +406,64 @@ function possibleSpells() {
         spells += `[${i + 1}. ${player.spells[i]}]`;
     }
     return spells;
+}
+
+async function singleTargetManual(spellChosen) {
+    let target = prompt(`Choose a target => ${possibleTargets()}: `);
+    if (arrMonster[target - 1]) {
+        if (player.mana[0] >= spell[player.spells[spellChosen - 1]].manaCost) {
+            const damageDealt = spell[player.spells[spellChosen - 1]].effect();
+            arrMonster[target - 1].hp[0] -= damageDealt;
+            console.log(`\n${player.name} used ${player.spells[spellChosen - 1]}!`);
+            console.log(`You dealt ${damageDealt} damage to ${arrMonster[target - 1].name}.\n`);
+            await delay();
+            if (arrMonster[target - 1].hp[0] <= 0) {
+                arrMonster[target - 1].hp[0] = 0;
+                player.currentExp += arrMonster[target - 1].expGain;
+                console.log(`You killed a ${arrMonster[target - 1].name}.`);
+                console.log(`You gained ${arrMonster[target - 1].expGain} experience.\n`);
+                await delay();
+                arrMonster.splice(arrMonster.indexOf(arrMonster[target - 1]), 1);
+            }
+            while (player.currentExp >= player.nextLevel) {
+                action.levelUp();
+                action.restore();
+                await delay();
+            }
+            turn = 'monster';
+        } else {
+            console.log('\nNot enough mana.\n');
+        }
+    } else {
+        console.log('\nTarget invalid.\n');
+    }
+}
+
+async function singleTargetRandom(spellChosen) {
+    if (player.mana[0] >= spell[player.spells[spellChosen - 1]].manaCost) {
+        const damageDealt = spell[player.spells[spellChosen - 1]].effect();
+        let target = Math.floor(Math.random() * arrMonster.length);
+        arrMonster[target].hp[0] -= damageDealt;
+        console.log(`\n${player.name} used ${player.spells[spellChosen - 1]}!`);
+        console.log(`You dealt ${damageDealt} damage to ${arrMonster[target].name}.\n`);
+        await delay();
+        if (arrMonster[target].hp[0] <= 0) {
+            arrMonster[target].hp[0] = 0;
+            console.log(`You killed a ${arrMonster[target].name}.`);
+            player.currentExp += arrMonster[target].expGain;
+            console.log(`You gained ${arrMonster[target].expGain} experience.\n`);
+            await delay();
+            arrMonster.splice(arrMonster.indexOf(arrMonster[target]), 1);
+            while (player.currentExp >= player.nextLevel) {
+                action.levelUp();
+                action.restore();
+                await delay();
+            }
+            turn = 'monster';
+        }
+    } else {
+        console.log('\nNot enough mana.\n');
+    }
 }
 
 function finishBattle() {
