@@ -251,7 +251,7 @@ async function gameplay() {
                     console.log(
                         `\n[${player.name}, Level: ${player.level}, Hp: ${player.hp[0]} / ${player.hp[1]}, Mana: ${player.mana[0]} / ${player.mana[1]}]`,
                     );
-                    if (player.status) {
+                    if (player.status.length > 0) {
                         console.log(action.showStatus(player.status));
                     }
                     console.log(`\n            vs\n`);
@@ -261,7 +261,7 @@ async function gameplay() {
                                 arrMonster[i].hp[1]
                             }]`,
                         );
-                        if (arrMonster[i].status) {
+                        if (arrMonster[i].status.length > 0) {
                             console.log(action.showStatus(arrMonster[i].status));
                         }
                     }
@@ -353,7 +353,7 @@ async function gameplay() {
                             if (player.hp[0] <= 0) {
                                 console.log(`\nYou have been killed by ${monster.name}.`);
                                 await delay();
-                                const expLost = Math.floor(player.currentExp * 0.8);
+                                const expLost = Math.floor(player.currentExp * 0.08);
                                 player.currentExp -= expLost;
                                 console.log(`You lost ${expLost} experience.\n`);
                                 await delay();
