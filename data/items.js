@@ -32,6 +32,7 @@ const database = {
                 magicAtk: 0,
                 def: 0,
                 twoHanded: false,
+                path: ['weapons', 'swords', 'knife'],
             },
             woodenSword: {
                 id: '1102',
@@ -41,6 +42,7 @@ const database = {
                 magicAtk: 0,
                 def: 3,
                 twoHanded: false,
+                path: ['weapons', 'swords', 'woodenSword'],
             },
             rapier: {
                 id: '1103',
@@ -50,6 +52,7 @@ const database = {
                 magicAtk: 0,
                 def: 5,
                 twoHanded: false,
+                path: ['weapons', 'swords', 'rapier'],
             },
             sword: {
                 id: '1104',
@@ -59,6 +62,7 @@ const database = {
                 magicAtk: 0,
                 def: 7,
                 twoHanded: false,
+                path: ['weapons', 'swords', 'sword'],
             },
             brandedSword: {
                 id: '1105',
@@ -68,6 +72,7 @@ const database = {
                 magicAtk: 0,
                 def: 6,
                 twoHanded: true,
+                path: ['weapons', 'swords', 'brandedSword'],
             },
         },
         axes: {
@@ -79,6 +84,7 @@ const database = {
                 magicAtk: 0,
                 def: 2,
                 twoHanded: false,
+                path: ['weapons', 'axes', 'hatchet'],
             },
             axe: {
                 id: '1202',
@@ -88,6 +94,7 @@ const database = {
                 magicAtk: 0,
                 def: 3,
                 twoHanded: true,
+                path: ['weapons', 'axes', 'axe'],
             },
             lumberjackAxe: {
                 id: '1203',
@@ -97,6 +104,7 @@ const database = {
                 magicAtk: 0,
                 def: 3,
                 twoHanded: true,
+                path: ['weapons', 'axes', 'lumberjackAxe'],
             },
         },
         rods: {
@@ -109,6 +117,7 @@ const database = {
                 def: 0,
                 manaCost: 2,
                 twoHanded: false,
+                path: ['weapons', 'rods', 'apprenticeRod'],
             },
             natureRod: {
                 id: '1302',
@@ -119,6 +128,7 @@ const database = {
                 def: 0,
                 manaCost: 3,
                 twoHanded: false,
+                path: ['weapons', 'rods', 'natureRod'],
             },
             tempestRod: {
                 id: '1303',
@@ -129,6 +139,7 @@ const database = {
                 def: 0,
                 manaCost: 5,
                 twoHanded: false,
+                path: ['weapons', 'rods', 'tempestRod'],
             },
         },
         bows: {
@@ -140,6 +151,7 @@ const database = {
                 magicAtk: 0,
                 def: 0,
                 twoHanded: true,
+                path: ['weapons', 'bows', 'shortBow'],
             },
             bow: {
                 id: '1402',
@@ -149,6 +161,7 @@ const database = {
                 magicAtk: 0,
                 def: 0,
                 twoHanded: true,
+                path: ['weapons', 'bows', 'bow'],
             },
             longbow: {
                 id: '1403',
@@ -158,6 +171,7 @@ const database = {
                 magicAtk: 0,
                 def: 0,
                 twoHanded: true,
+                path: ['weapons', 'bows', 'longbow'],
             },
         },
     },
@@ -167,48 +181,56 @@ const database = {
             name: 'Coat',
             description: 'Arm: 3',
             arm: 3,
+            path: ['armors', 'coat'],
         },
         leatherArmor: {
             id: '1502',
             name: 'Leather Armor',
             description: 'Arm: 5',
             arm: 5,
+            path: ['armors', 'leatherArmor'],
         },
         chainArmor: {
             id: '1503',
             name: 'Chain Armor',
             description: 'Arm: 7',
             arm: 7,
+            path: ['armors', 'chainArmor'],
         },
         brassArmor: {
             id: '1504',
             name: 'Brass Armor',
             description: 'Arm: 10',
             arm: 10,
+            path: ['armors', 'brassArmor'],
         },
         ironArmor: {
             id: '1505',
             name: 'Iron Armor',
             description: 'Arm: 13',
             arm: 13,
+            path: ['armors', 'ironArmor'],
         },
         nobleArmor: {
             id: '1506',
             name: 'Noble Armor',
             description: 'Arm: 16',
             arm: 16,
+            path: ['armors', 'nobleArmor'],
         },
         steelArmor: {
             id: '1507',
             name: 'Steel Armor',
             description: 'Arm: 20',
             arm: 20,
+            path: ['armors', 'steelArmor'],
         },
         plateArmor: {
             id: '1508',
             name: 'Plate Armor',
             description: 'Arm: 25',
             arm: 25,
+            path: ['armors', 'plateArmor'],
         },
     },
     shields: {
@@ -217,36 +239,42 @@ const database = {
             name: 'Wooden Shield',
             description: 'Def: 6',
             def: 6,
+            path: ['shields', 'woodenShield'],
         },
         orcShield: {
             id: '1602',
             name: 'Orc Shield',
             description: 'Def: 9',
             def: 9,
+            path: ['shields', 'orcShield'],
         },
         ironShield: {
             id: '1603',
             name: 'Iron Shield',
             description: 'Def: 10',
             def: 10,
+            path: ['shields', 'ironShield'],
         },
         steelShield: {
             id: '1604',
             name: 'Steel Shield',
             description: 'Def: 14',
             def: 14,
+            path: ['shields', 'steelShield'],
         },
         plateShield: {
             id: '1605',
             name: 'Plate Shield',
             description: 'Def: 18',
             def: 18,
+            path: ['shields', 'plateShield'],
         },
         dragonShield: {
             id: '1606',
             name: 'Dragon Shield',
             description: 'Def: 21',
             def: 21,
+            path: ['shields', 'dragonShield'],
         },
     },
     necklaces: {
@@ -257,6 +285,7 @@ const database = {
             bonus() {
                 //to do
             },
+            path: ['necklaces', 'protectionAmulet'],
         },
         silverAmulet: {
             id: '1702',
@@ -265,6 +294,7 @@ const database = {
             bonus() {
                 //to do
             },
+            path: ['necklaces', 'silverAmulet'],
         },
     },
     rings: {
@@ -274,6 +304,7 @@ const database = {
             bonus() {
                 //to do
             },
+            path: ['rings', 'lifeRing'],
         },
     },
     backpacks: {
@@ -282,24 +313,28 @@ const database = {
             name: 'Bag',
             description: 'Size: 6',
             size: 6,
+            path: ['backpacks', 'bag'],
         },
         backpack: {
             id: '1902',
             name: 'Backpack',
             description: 'Size: 10',
             size: 10,
+            path: ['backpacks', 'backpack'],
         },
         huntingBackpack: {
             id: '1903',
             name: 'Hunting Backpack',
             description: 'Size: 16',
             size: 16,
+            path: ['backpacks', 'huntingBackpack'],
         },
         crimsonBackpack: {
             id: '1904',
             name: 'Crimson Backpack',
             description: 'Size: 20',
             size: 20,
+            path: ['backpacks', 'crimsonBackpack'],
         },
     },
     usable: {
@@ -310,9 +345,10 @@ const database = {
                 description: 'Heals for a small amount, tastes like strawberries.',
                 price: 50,
                 use() {
-                    const recover = Math.floor(Math.random() * (70 - 40) + 40);
+                    const recover = Math.floor(Math.random() * (150 - 110) + 110);
                     return ['life', recover];
                 },
+                path: ['usable', 'potions', 'lifePotion'],
             },
             manaPotion: {
                 id: '2102',
@@ -320,9 +356,10 @@ const database = {
                 description: 'Recovers a small amount of mana.',
                 price: 60,
                 use() {
-                    const recover = Math.floor(Math.random() * (85 - 50) + 50);
+                    const recover = Math.floor(Math.random() * (95 - 70) + 70);
                     return ['mana', recover];
                 },
+                path: ['usable', 'potions', 'manaPotion'],
             },
             antidote: {
                 id: '2103',
@@ -332,13 +369,14 @@ const database = {
                 use() {
                     return ['status', 'Poison'];
                 },
+                path: ['usable', 'potions', 'antidote'],
             },
         },
         foods: {
             cheese: {
                 id: '2201',
                 name: 'Cheese',
-                description: 'A slice of cheese. Heals for a very small amount',
+                description: 'A slice of cheese. Heals Hp/Mana for a very small amount',
                 price: 15,
                 use() {
                     player.hp[0] += Math.floor(Math.random() * (20 - 10) + 10);
@@ -350,6 +388,7 @@ const database = {
                         player.mana[0] = player.mana[1];
                     }
                 },
+                path: ['usable', 'foods', 'cheese'],
             },
         },
     },
@@ -360,19 +399,22 @@ const database = {
                 name: 'Rat Flesh',
                 description: 'Just a piece of flesh, maybe someone on the market wants this.',
                 price: 5,
+                path: ['miscellaneous', 'creatures', 'ratFlesh'],
             },
             spiderFangs: {
                 id: '3102',
                 name: 'Spider Fangs',
                 description: 'Fangs of a spider, maybe someone on the market wants this.',
                 price: 7,
+                path: ['miscellaneous', 'creatures', 'spiderFangs'],
             },
         },
         quests: {
             purpleRock: {
                 id: '3301',
                 name: 'Purple Rock',
-                description: 'A piece of a purple pigmented rock. You can feel a weak aura coming out of it, like a curse.',
+                description: 'A piece of a purple pigmented rock. You can feel a weak aura coming out of it.',
+                path: ['miscellaneous', 'quests', 'purpleRock'],
             },
         },
     },

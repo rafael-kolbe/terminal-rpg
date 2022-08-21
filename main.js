@@ -24,14 +24,12 @@ async function gameplay() {
     while (!login) {
         const playerChoice = prompt('Do you want to load a saved file? => [yes][no]: ');
         if (playerChoice === 'yes') {
-            //load files
             let files = await possibleFiles();
             if (files.length) {
                 let fileChosen = prompt(`Choose a file to load => ${files}: `);
                 if (files.includes(fileChosen)) {
                     let loadedFile = await load(fileChosen);
-                    //player = JSON.parse(loadedFile);
-                    console.log(loadedFile);
+                    loadPlayer(loadedFile);
                     login = true;
                 } else {
                     console.log('\nFilename invalid.\n');
@@ -241,7 +239,7 @@ async function gameplay() {
                     console.log('\nAction invalid.\n');
                 }
             } else if (playerAction === 'travel') {
-                action.travel(prompt(`Choose a location to travel to => ${possibleDirections()}: `));
+                await action.travel(prompt(`Choose a location to travel to => ${possibleDirections()}: `));
             } else if (playerAction === 'hunt') {
                 console.log(`\nHunting at ${player.location}...`);
                 arrMonster = action.hunt(location[player.location].mob.length);
@@ -297,6 +295,7 @@ async function gameplay() {
                                 arrMonster.splice(arrMonster.indexOf(arrMonster[target - 1]), 1);
                                 while (player.currentExp >= player.nextLevel) {
                                     action.levelUp();
+                                    await delay(500);
                                     action.restore();
                                     await delay();
                                 }
@@ -441,6 +440,7 @@ async function singleTargetManual(spellChosen) {
             }
             while (player.currentExp >= player.nextLevel) {
                 action.levelUp();
+                await delay(500);
                 action.restore();
                 await delay();
             }
@@ -470,6 +470,7 @@ async function singleTargetRandom(spellChosen) {
             arrMonster.splice(arrMonster.indexOf(arrMonster[target]), 1);
             while (player.currentExp >= player.nextLevel) {
                 action.levelUp();
+                await delay(500);
                 action.restore();
                 await delay();
             }
@@ -494,8 +495,9 @@ async function exit() {
         const fileName = prompt('Choose a name for your save file: ');
         const objectJson = JSON.stringify(player, null, '\t');
         await save(fileName, objectJson);
-        await delay(1500);
+        await delay(1000);
         console.log('Thanks for playing!');
+        await delay(1000);
         gameState = false;
     } else if (exitResponse === 'no') {
         console.log('\nAction canceled. The game was not closed.\n');
@@ -521,11 +523,64 @@ async function load(fileChosen) {
         return fs.readFile(`./data/save/${fileChosen}.json`, 'utf8', (err, data) => {
             if (err) return reject(err);
             console.log('\nData loaded successfully.\n');
-            return resolve(data);
+            return resolve(JSON.parse(data));
         });
     });
     await delay(500);
     return readFile;
 }
 
-module.exports = player;
+function loadPlayer(loadedFile) {
+    player.name = loadedFile.name;
+    player.level = loadedFile.level;
+    player.vocation = vocation[loadedFile.vocation.name.toLowerCase()];
+    player.currentExp = loadedFile.currentExp;
+    player.hp = loadedFile.hp;
+    player.mana = loadedFile.mana;
+    player.atk = loadedFile.atk;
+    player.magicAtk = loadedFile.magicAtk;
+    player.armor = loadedFile.armor;
+    player.def = loadedFile.def;
+    player.status = loadedFile.status;
+    player.gold = loadedFile.gold;
+    player.spells = loadedFile.spells;
+    player.location = loadedFile.location;
+    player.mode = loadedFile.mode;
+
+    //equipments here
+    const weaponPath = loadedFile.equipment.weapon.path;
+    const shieldPath = loadedFile.equipment.shield.path;
+    const armorPath = loadedFile.equipment.armor.path;
+    const necklacePath = loadedFile.equipment.necklace.path;
+    const ringPath = loadedFile.equipment.ring.path;
+    const backpackPath = loadedFile.equipment.backpack.path;
+    if (loadedFile.equipment.weapon) {
+        player.equipment.weapon = database[weaponPath[0]][weaponPath[1]][weaponPath[2]];
+    }
+    if (loadedFile.equipment.shield) {
+        player.equipment.shield = database[shieldPath[0]][shieldPath[1]];
+    }
+    if (loadedFile.equipment.armor) {
+        player.equipment.armor = database[armorPath[0]][armorPath[1]];
+    }
+    if (loadedFile.equipment.necklace) {
+        player.equipment.necklace = database[necklacePath[0]][necklacePath[1]];
+    }
+    if (loadedFile.equipment.ring) {
+        player.equipment.ring = database[ringPath[0]][ringPath[1]];
+    }
+    if (loadedFile.equipment.backpack) {
+        player.equipment.backpack = database[backpackPath[0]][backpackPath[1]];
+    }
+
+    //items here
+    for (let obj of loadedFile.items) {
+        let item = obj.item;
+        let qty = obj.qty;
+        if (item.path.length === 3) {
+            action.addItem(database[item.path[0]][item.path[1]][item.path[2]], qty);
+        } else if (item.path.length === 2) {
+            action.addItem(database[item.path[0]][item.path[1]], qty);
+        }
+    }
+}

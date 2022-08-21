@@ -1,21 +1,21 @@
 {
-	"name": "Shiraori",
-	"level": 1,
+	"name": "TestCharacter",
+	"level": 2,
 	"vocation": {
 		"name": "Mage"
 	},
-	"currentExp": 0,
-	"nextLevel": 100,
+	"currentExp": 110,
+	"nextLevel": 300,
 	"hp": [
-		150,
-		150
+		155,
+		155
 	],
 	"mana": [
-		40,
-		40
+		70,
+		70
 	],
-	"atk": 5,
-	"magicAtk": 7,
+	"atk": 5.5,
+	"magicAtk": 8.5,
 	"armor": 3,
 	"def": 0,
 	"status": [],
@@ -29,14 +29,23 @@
 			"magicAtk": 7,
 			"def": 0,
 			"manaCost": 2,
-			"twoHanded": false
+			"twoHanded": false,
+			"path": [
+				"weapons",
+				"rods",
+				"apprenticeRod"
+			]
 		},
 		"shield": "",
 		"armor": {
 			"id": "1501",
 			"name": "Coat",
 			"description": "Arm: 3",
-			"arm": 3
+			"arm": 3,
+			"path": [
+				"armors",
+				"coat"
+			]
 		},
 		"necklace": "",
 		"ring": "",
@@ -44,7 +53,11 @@
 			"id": "1901",
 			"name": "Bag",
 			"description": "Size: 6",
-			"size": 6
+			"size": 6,
+			"path": [
+				"backpacks",
+				"bag"
+			]
 		}
 	},
 	"items": [
@@ -53,25 +66,39 @@
 				"id": "2101",
 				"name": "Life Potion",
 				"description": "Heals for a small amount, tastes like strawberries.",
-				"price": 50
+				"price": 50,
+				"path": [
+					"usable",
+					"potions",
+					"lifePotion"
+				]
 			},
-			"qty": 4
+			"qty": 3
 		},
 		{
 			"item": {
 				"id": "2102",
 				"name": "Mana Potion",
 				"description": "Recovers a small amount of mana.",
-				"price": 60
+				"price": 60,
+				"path": [
+					"usable",
+					"potions",
+					"manaPotion"
+				]
 			},
-			"qty": 2
+			"qty": 1
 		},
 		{
 			"item": {
 				"id": "1504",
 				"name": "Brass Armor",
 				"description": "Arm: 10",
-				"arm": 10
+				"arm": 10,
+				"path": [
+					"armors",
+					"brassArmor"
+				]
 			},
 			"qty": 1
 		},
@@ -80,7 +107,11 @@
 				"id": "1606",
 				"name": "Dragon Shield",
 				"description": "Def: 21",
-				"def": 21
+				"def": 21,
+				"path": [
+					"shields",
+					"dragonShield"
+				]
 			},
 			"qty": 2
 		},
@@ -92,7 +123,12 @@
 				"atk": 16,
 				"magicAtk": 0,
 				"def": 3,
-				"twoHanded": true
+				"twoHanded": true,
+				"path": [
+					"weapons",
+					"axes",
+					"lumberjackAxe"
+				]
 			},
 			"qty": 1
 		},
@@ -105,7 +141,12 @@
 				"magicAtk": 19,
 				"def": 0,
 				"manaCost": 5,
-				"twoHanded": false
+				"twoHanded": false,
+				"path": [
+					"weapons",
+					"rods",
+					"tempestRod"
+				]
 			},
 			"qty": 1
 		}
