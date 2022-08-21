@@ -1,0 +1,118 @@
+{
+	"name": "Shiraori",
+	"level": 1,
+	"vocation": {
+		"name": "Mage"
+	},
+	"currentExp": 0,
+	"nextLevel": 100,
+	"hp": [
+		150,
+		150
+	],
+	"mana": [
+		40,
+		40
+	],
+	"atk": 5,
+	"magicAtk": 7,
+	"armor": 3,
+	"def": 0,
+	"status": [],
+	"gold": 0,
+	"equipment": {
+		"weapon": {
+			"id": "1301",
+			"name": "Apprentice Rod",
+			"description": "Atk: 0, Matk: 7, Def: 0, One-handed weapon",
+			"atk": 0,
+			"magicAtk": 7,
+			"def": 0,
+			"manaCost": 2,
+			"twoHanded": false
+		},
+		"shield": "",
+		"armor": {
+			"id": "1501",
+			"name": "Coat",
+			"description": "Arm: 3",
+			"arm": 3
+		},
+		"necklace": "",
+		"ring": "",
+		"backpack": {
+			"id": "1901",
+			"name": "Bag",
+			"description": "Size: 6",
+			"size": 6
+		}
+	},
+	"items": [
+		{
+			"item": {
+				"id": "2101",
+				"name": "Life Potion",
+				"description": "Heals for a small amount, tastes like strawberries.",
+				"price": 50
+			},
+			"qty": 4
+		},
+		{
+			"item": {
+				"id": "2102",
+				"name": "Mana Potion",
+				"description": "Recovers a small amount of mana.",
+				"price": 60
+			},
+			"qty": 2
+		},
+		{
+			"item": {
+				"id": "1504",
+				"name": "Brass Armor",
+				"description": "Arm: 10",
+				"arm": 10
+			},
+			"qty": 1
+		},
+		{
+			"item": {
+				"id": "1606",
+				"name": "Dragon Shield",
+				"description": "Def: 21",
+				"def": 21
+			},
+			"qty": 2
+		},
+		{
+			"item": {
+				"id": "1203",
+				"name": "Lumberjack Axe",
+				"description": "Atk: 16, Matk: 0, Def: 3, Two-handed weapon",
+				"atk": 16,
+				"magicAtk": 0,
+				"def": 3,
+				"twoHanded": true
+			},
+			"qty": 1
+		},
+		{
+			"item": {
+				"id": "1303",
+				"name": "Tempest Rod",
+				"description": "Atk: 0, Matk: 19, Def: 0, One-handed weapon",
+				"atk": 0,
+				"magicAtk": 19,
+				"def": 0,
+				"manaCost": 5,
+				"twoHanded": false
+			},
+			"qty": 1
+		}
+	],
+	"spells": [
+		"Energy Strike"
+	],
+	"location": "city",
+	"mode": "idle"
+}

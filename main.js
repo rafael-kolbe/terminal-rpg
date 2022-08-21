@@ -25,7 +25,20 @@ async function gameplay() {
         const playerChoice = prompt('Do you want to load a saved file? => [yes][no]: ');
         if (playerChoice === 'yes') {
             //load files
-            //checkDir(possibleFiles);
+            let files = await possibleFiles();
+            if (files.length) {
+                let fileChosen = prompt(`Choose a file to load => ${files}: `);
+                if (files.includes(fileChosen)) {
+                    let loadedFile = await load(fileChosen);
+                    //player = JSON.parse(loadedFile);
+                    console.log(loadedFile);
+                    login = true;
+                } else {
+                    console.log('\nFilename invalid.\n');
+                }
+            } else {
+                console.log('\nYou have no saved files yet.\n');
+            }
         } else if (playerChoice === 'no') {
             const nameChosen = prompt('Choose a name: ');
             player.name = nameChosen.charAt(0).toUpperCase() + nameChosen.slice(1);
@@ -151,7 +164,7 @@ async function gameplay() {
                 action.restore();
                 await delay();
             } else if (playerAction === 'exit') {
-                exit();
+                await exit();
             } else {
                 console.log('\nAction invalid.\n');
             }
@@ -371,7 +384,7 @@ async function gameplay() {
     }
 }
 
-function possibleFiles() {
+async function possibleFiles() {
     let savedFiles = '';
     fs.readdir('./data/save', (err, files) => {
         if (err) throw err;
@@ -379,6 +392,7 @@ function possibleFiles() {
             savedFiles += '[' + file.split('.')[0] + ']';
         }
     });
+    await delay(500);
     return savedFiles;
 }
 
@@ -474,13 +488,14 @@ function finishBattle() {
     turn = 'standby';
 }
 
-function exit() {
+async function exit() {
     let exitResponse = prompt('Are you sure you want to leave the game? => [yes][no]: ');
     if (exitResponse === 'yes') {
-        // const fileName = prompt('Choose a name for your save file: ');
-        // const objectJson = JSON.stringify(player, null, '\t');
-        // save(fileName, objectJson);
-        console.log('\nThanks for playing!');
+        const fileName = prompt('Choose a name for your save file: ');
+        const objectJson = JSON.stringify(player, null, '\t');
+        await save(fileName, objectJson);
+        await delay(1500);
+        console.log('Thanks for playing!');
         gameState = false;
     } else if (exitResponse === 'no') {
         console.log('\nAction canceled. The game was not closed.\n');
@@ -493,31 +508,24 @@ function delay(ms = 2000) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-function save(fileName, objectJson) {
+async function save(fileName, objectJson) {
     fs.writeFile(`./data/save/${fileName}.json`, objectJson, err => {
         if (err) throw err;
         console.log('\nYour progress was saved!\n');
     });
+    await delay(500);
 }
 
-function load(fileChosen) {
-    fs.readFile(`./data/save/${fileChosen}.json`, 'utf8', (err, data) => {
-        if (err) {
-            console.log('\nFileName invalid.\n');
-        }
-        player = JSON.parse(data);
-        login = true;
+async function load(fileChosen) {
+    const readFile = await new Promise((resolve, reject) => {
+        return fs.readFile(`./data/save/${fileChosen}.json`, 'utf8', (err, data) => {
+            if (err) return reject(err);
+            console.log('\nData loaded successfully.\n');
+            return resolve(data);
+        });
     });
+    await delay(500);
+    return readFile;
 }
 
-function checkDir(callback) {
-    fs.readdir('./data/save', (err, files) => {
-        if (err) throw err;
-        if (!files.length) {
-            console.log('\nYou have no saved files yet.\n');
-        } else {
-            const fileChosen = prompt(`Choose a file to load => ${callback()}: `);
-            load(fileChosen);
-        }
-    });
-}
+module.exports = player;
