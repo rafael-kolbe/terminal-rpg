@@ -1,50 +1,59 @@
 {
 	"name": "TestCharacter",
-	"level": 2,
+	"level": 3,
 	"vocation": {
 		"name": "Mage"
 	},
-	"currentExp": 110,
-	"nextLevel": 300,
+	"currentExp": 440,
+	"nextLevel": 600,
 	"hp": [
-		155,
-		155
+		160,
+		160
 	],
 	"mana": [
-		70,
-		70
+		100,
+		100
 	],
-	"atk": 5.5,
-	"magicAtk": 8.5,
-	"armor": 3,
-	"def": 0,
+	"atk": 6,
+	"magicAtk": 22,
+	"armor": 10,
+	"def": 21,
 	"status": [],
 	"gold": 0,
 	"equipment": {
 		"weapon": {
-			"id": "1301",
-			"name": "Apprentice Rod",
-			"description": "Atk: 0, Matk: 7, Def: 0, One-handed weapon",
+			"id": "1303",
+			"name": "Tempest Rod",
+			"description": "Atk: 0, Matk: 19, Def: 0, One-handed weapon",
 			"atk": 0,
-			"magicAtk": 7,
+			"magicAtk": 19,
 			"def": 0,
-			"manaCost": 2,
+			"manaCost": 5,
 			"twoHanded": false,
 			"path": [
 				"weapons",
 				"rods",
-				"apprenticeRod"
+				"tempestRod"
 			]
 		},
-		"shield": "",
+		"shield": {
+			"id": "1606",
+			"name": "Dragon Shield",
+			"description": "Def: 21",
+			"def": 21,
+			"path": [
+				"shields",
+				"dragonShield"
+			]
+		},
 		"armor": {
-			"id": "1501",
-			"name": "Coat",
-			"description": "Arm: 3",
-			"arm": 3,
+			"id": "1504",
+			"name": "Brass Armor",
+			"description": "Arm: 10",
+			"arm": 10,
 			"path": [
 				"armors",
-				"coat"
+				"brassArmor"
 			]
 		},
 		"necklace": "",
@@ -73,7 +82,7 @@
 					"lifePotion"
 				]
 			},
-			"qty": 3
+			"qty": 2
 		},
 		{
 			"item": {
@@ -91,19 +100,6 @@
 		},
 		{
 			"item": {
-				"id": "1504",
-				"name": "Brass Armor",
-				"description": "Arm: 10",
-				"arm": 10,
-				"path": [
-					"armors",
-					"brassArmor"
-				]
-			},
-			"qty": 1
-		},
-		{
-			"item": {
 				"id": "1606",
 				"name": "Dragon Shield",
 				"description": "Def: 21",
@@ -113,42 +109,53 @@
 					"dragonShield"
 				]
 			},
-			"qty": 2
-		},
-		{
-			"item": {
-				"id": "1203",
-				"name": "Lumberjack Axe",
-				"description": "Atk: 16, Matk: 0, Def: 3, Two-handed weapon",
-				"atk": 16,
-				"magicAtk": 0,
-				"def": 3,
-				"twoHanded": true,
-				"path": [
-					"weapons",
-					"axes",
-					"lumberjackAxe"
-				]
-			},
 			"qty": 1
 		},
 		{
 			"item": {
-				"id": "1303",
-				"name": "Tempest Rod",
-				"description": "Atk: 0, Matk: 19, Def: 0, One-handed weapon",
+				"id": "1301",
+				"name": "Apprentice Rod",
+				"description": "Atk: 0, Matk: 7, Def: 0, One-handed weapon",
 				"atk": 0,
-				"magicAtk": 19,
+				"magicAtk": 7,
 				"def": 0,
-				"manaCost": 5,
+				"manaCost": 2,
 				"twoHanded": false,
 				"path": [
 					"weapons",
 					"rods",
-					"tempestRod"
+					"apprenticeRod"
 				]
 			},
 			"qty": 1
+		},
+		{
+			"item": {
+				"id": "3102",
+				"name": "Spider Fangs",
+				"description": "Fangs of a spider, maybe someone on the market wants this.",
+				"price": 7,
+				"path": [
+					"miscellaneous",
+					"creatures",
+					"spiderFangs"
+				]
+			},
+			"qty": 4
+		},
+		{
+			"item": {
+				"id": "3101",
+				"name": "Rat Flesh",
+				"description": "Just a piece of flesh, maybe someone on the market wants this.",
+				"price": 5,
+				"path": [
+					"miscellaneous",
+					"creatures",
+					"ratFlesh"
+				]
+			},
+			"qty": 2
 		}
 	],
 	"spells": [

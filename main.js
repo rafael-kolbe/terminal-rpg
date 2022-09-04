@@ -17,6 +17,7 @@ let login = false;
 let vocationSet = false;
 let gameState = true;
 let arrMonster = [];
+let drop = ['empty'];
 let turn = 'standby';
 
 gameplay();
@@ -71,13 +72,8 @@ async function gameplay() {
                 }
             }
 
-            action.addItem(database.usable.potions.lifePotion, 1);
-            action.addItem(database.usable.potions.lifePotion, 3);
-            action.addItem(database.usable.potions.manaPotion, 2);
-            action.addItem(database.armors.brassArmor, 1);
-            action.addItem(database.shields.dragonShield, 2);
-            action.addItem(database.weapons.axes.lumberjackAxe, 1);
-            action.addItem(database.weapons.rods.tempestRod, 1);
+            action.addItem(database.usable.potions.lifePotion, 4);
+            action.addItem(database.usable.potions.manaPotion, 4);
 
             login = true;
         } else {
@@ -252,8 +248,12 @@ async function gameplay() {
 
         while (player.mode === 'battle') {
             while (turn === 'standby' && player.mode === 'battle') {
+                if (drop[0] === 'empty') {
+                    droppedItems();
+                    console.log(drop);
+                }
                 if (arrMonster.length === 0) {
-                    finishBattle();
+                    await finishBattle();
                 } else {
                     console.log(`\n[${player.name}, Level: ${player.level}, Hp: ${player.hp[0]} / ${player.hp[1]}, Mana: ${player.mana[0]} / ${player.mana[1]}]`);
                     if (player.status.length > 0) {
@@ -481,10 +481,38 @@ async function singleTargetRandom(spellChosen) {
     }
 }
 
-function finishBattle() {
+function droppedItems() {
+    drop = [];
+    let deleteIndex = [];
+    for (let monster of arrMonster) {
+        monster.drop.forEach(item => drop.push(item));
+    }
+
+    console.log(drop);
+
+    drop.forEach(item => {
+        let random = Math.floor(Math.random() * 100 + 1);
+        console.log(random);
+        random > item.dropRate ? deleteIndex.unshift(drop.indexOf(item)) : null;
+    });
+
+    deleteIndex.forEach(index => drop.splice(index, 1));
+}
+
+async function finishBattle() {
     while (arrMonster.length > 0) {
         arrMonster.pop();
     }
+
+    drop.forEach(obj => {
+        console.log(`You looted ${obj.qty} ${obj.item.name}.`);
+        action.addItem(obj.item, obj.qty);
+    });
+    await delay();
+    action.isInventoryFull();
+    console.log(''); //Skip a line.
+
+    drop = ['empty'];
     player.mode = 'idle';
     turn = 'standby';
 }
@@ -535,6 +563,7 @@ function loadPlayer(loadedFile) {
     player.level = loadedFile.level;
     player.vocation = vocation[loadedFile.vocation.name.toLowerCase()];
     player.currentExp = loadedFile.currentExp;
+    player.nextLevel = expTable[loadedFile.level - 1];
     player.hp = loadedFile.hp;
     player.mana = loadedFile.mana;
     player.atk = loadedFile.atk;
