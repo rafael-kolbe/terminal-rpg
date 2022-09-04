@@ -1,3 +1,9 @@
+### HOW TO START
+
+Clone this repository in your machine.
+Run 'npm install' on the main directory.
+Run 'node main.js' on the main directory.
+
 ### TO DO LIST
 
 -   Rework the battle phase.
@@ -7,7 +13,7 @@
 3.  [x] Give the player the actions to choose between 'Attack', 'Spell' and 'Item'.
 4.  [ ] Add a time mechanic in battle, so that regeneration and status effects can work properly.
 5.  [x] Make defense and magic attack to apply in battle.
-6.  [ ] Create a drop mechanic. The player must choose to add 'All' or specific items to the inventory.
+6.  [x] Create a drop mechanic. The player must choose to add 'All' or specific items to the inventory.
 
 -   Others.
 
