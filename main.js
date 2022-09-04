@@ -250,7 +250,7 @@ async function gameplay() {
             while (turn === 'standby' && player.mode === 'battle') {
                 if (drop[0] === 'empty') {
                     droppedItems();
-                    console.log(drop);
+                    console.log(drop); //delete this later
                 }
                 if (arrMonster.length === 0) {
                     await finishBattle();
@@ -392,7 +392,7 @@ async function possibleFiles() {
         }
     });
     await delay(500);
-    return savedFiles;
+    return savedFiles.replace('[_saveFilesHere]', '');
 }
 
 function possibleDirections() {
@@ -488,11 +488,11 @@ function droppedItems() {
         monster.drop.forEach(item => drop.push(item));
     }
 
-    console.log(drop);
+    console.log(drop); //delete this later
 
     drop.forEach(item => {
         let random = Math.floor(Math.random() * 100 + 1);
-        console.log(random);
+        console.log(random); //delete this later
         random > item.dropRate ? deleteIndex.unshift(drop.indexOf(item)) : null;
     });
 
